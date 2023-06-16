@@ -1,0 +1,182 @@
+---
+title: "Hypothesis"
+format:
+  html:
+    toc: true
+    html-math-method: katex
+    css: styles.css
+    code-fold: true
+    code-summary: "Show the code"
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+```{r, message= FALSE, warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(dplyr)
+library(data.table)
+library(lme4)
+library(ggplot2)
+library(pscl) # for odTest
+library(arm)
+library(sjPlot)
+library(rstatix)
+library(car)
+library(glue)
+
+remove_outliers <- function(x, na.rm = TRUE, ...) {
+  qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
+  H <- 1.5 * IQR(x, na.rm = na.rm)
+  y <- x
+  y[x < (qnt[1] - H)] <- NA
+  y[x > (qnt[2] + H)] <- NA
+  y
+}
+
+```
+
+```{r, include=FALSE}
+wd <- getwd()
+
+courses <- fread("data/courses.csv") %>%
+  mutate(visit_rate = round(vis_learner_b/ student_n, digits = 2), passing_rate = round(passing_rate, digits = 2)) 
+
+students <- fread("data/students.csv") %>%  mutate(duration = remove_outliers(duration))  
+students$vis_b <- factor(students$vis_b)
+
+assignments <- fread("data/assignments.csv") %>% 
+#fread("unzip -cq ../data/assignments.zip")   # works in Ubuntu
+  mutate(course_item_type_desc = factor(course_item_type_desc), vis_b = ifelse(vis_tw==0, 0, 1), vis_before_attempt_tw_b = ifelse(vis_before_attempt_tw==0, 0, 1), vis_before_attempt_tw_b = factor(vis_before_attempt_tw_b)) %>% 
+  group_by(course_item_id) %>% 
+  mutate(difficulty =  sum(first_attempt == 0) / n()) %>% 
+  ungroup() 
+
+
+#tw <- assignments %>% filter(assignment_time < 116) # delete observations over 3d quantile
+```
+
+## Hypothesis 1
+
+More: file 6.
+
+### Model 1
+
+```{r}
+# m10 <- glm(data = assignments, factor(first_attempt) ~ 1, family = "binomial")
+# saveRDS(m10, "data/m10.rds")
+# 
+```
+
+```{r}
+m10 <- readRDS( "data/m10.rds")
+summary(m10)
+```
+
+```{r}
+#m1 <- glmer(data = assignments, factor(first_attempt) ~ 1 + (1|hse_user_id) + (1|course_item_name), family = "binomial")
+# saveRDS(m1, "data/m1.rds")
+# 
+```
+
+```{r}
+m1 <- readRDS( "data/m1.rds")
+summary(m1)
+```
+
+```{r}
+sd_proficieny <- data.frame(VarCorr(m1))[5][1, 1]
+sd_difficulty <- data.frame(VarCorr(m1))[5][2, 1]
+coef <- summary(m1)$coef[1] # intercept of m0
+
+```
+
+```{r, echo=FALSE}
+cat(sprintf("Student standart deviation(proficiency) - %.2f.\n", sd_proficieny))
+cat(sprintf("Assignment standart deviation (difficulty) - %.2f.\n", sd_difficulty))
+```
+
+```{r}
+c_proficieny <- c(round(invlogit(coef - sd_proficieny), digits = 2), round(invlogit(coef + sd_proficieny), digits = 2))
+c_difficulty <- c(round(invlogit(coef - sd_proficieny - sd_difficulty), digits = 2), round(invlogit(coef - sd_proficieny + sd_difficulty), digits = 2))
+
+```
+
+```{r, echo=FALSE}
+cat(sprintf("Correctness of first assignemnt (CFA) or Probability to pass an average by average student assignment with the first attempt  - %.2f, beta - %.2f.\n", round(invlogit(coef), digits = 2), coef))
+cat(sprintf("-sd %.2f and +sd %.2f for student proficiency.\n", c_proficieny[1], c_proficieny[2] ))
+cat(sprintf("-sd %.2f and +sd %.2f for assignemtn difficulty.\n", c_difficulty[1], c_difficulty[2]))
+```
+
+```{r}
+ll1 <- logLik(m10)*-2
+ll2 <- logLik(m1)*-2
+chi <- ll1[1] - ll2[1]
+df <- 3-1
+
+chi
+df
+# the results are significant if qchisq greater than chi 
+qchisq(p=.0001, df=df, lower.tail=FALSE)
+```
+
+```{r}
+assignments  %>% filter(vis_before_attempt_tw < 1000) %>%   ggplot(aes(x = vis_before_attempt_tw, y = first_attempt, color = course_item_type_desc)) +
+  geom_point()   +  
+
+  geom_smooth(method = "glm", method.args=list(family="binomial")) +   
+  ggtitle("Probability to pass the test from the first attempt\nand forum visits during first attempt") +
+  labs(x = "Forum visists during first attempt", y = "Probability to pass test during first attempt", color = "Assignment type") +
+  theme_bw() +  
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+anova(m10, m1)
+```
+
+### Model 2
+
+```{r}
+#m2 <- glmer(data = assignments, factor(first_attempt) ~ 1 + vis_before_attempt_tw_b  + (1|hse_user_id) + (1|course_item_name), family = "binomial")
+#saveRDS(m2, "data/m2.rds")
+```
+
+```{r}
+m2 <- readRDS("data/m2.rds")
+summary(m2)
+m20 <- summary(m2)
+```
+
+```{r, echo=FALSE}
+cat(sprintf("Probability of CFA if a student didn't visit a forum before %.2f.\n", invlogit(m20$coefficients[1])))
+cat(sprintf("Probability of CFA if a student visited a forum at least once - %.2f\n\n", invlogit(m20$coefficients[1] + m20$coefficients[2])))
+```
+
+####  Visualisation
+
+```{r, warning=FALSE}
+# cbind(c("yes", "no"), c(0.70, 0.69)) %>% ggplot(aes(x = assignments$vis_before_attempt_tw_b, y=c(0.70, 0.69))) +
+#   geom_bar(stat='identity', width = 0.6, position = position_dodge(0.7)) #+    
+#   ggtitle("Probability of CFA") +
+#   scale_fill_discrete(labels=c("Passed", "Not passed")) +
+#   labs(x = "Forum visited or not", y = "Probability of CFA", fill = "First attempt") +
+#   theme_bw() +  
+#   theme(plot.title = element_text(hjust = 0.5))
+# 
+
+```
+
+```{r, warning=FALSE}
+assignments  %>%  ggplot(., aes(factor(vis_before_attempt_tw_b), fill = factor(first_attempt))) +
+  geom_bar(position = "dodge2") +
+  labs(x = "Forum visited or not", fill = "First attempt") + theme_classic() +  
+  scale_fill_discrete(labels=c("Not passed", "Passed")) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+
