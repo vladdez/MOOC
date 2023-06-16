@@ -40,15 +40,8 @@ remove_outliers <- function(x, na.rm = TRUE, ...) {
 
 ```{r, include=FALSE}
 wd <- getwd()
-
-courses <- fread("data/courses.csv") %>%
-  mutate(visit_rate = round(vis_learner_b/ student_n, digits = 2), passing_rate = round(passing_rate, digits = 2)) 
-
-students <- fread("data/students.csv") %>%  mutate(duration = remove_outliers(duration))  
-students$vis_b <- factor(students$vis_b)
-
+system('7z x data/assignments.zip -odata/.')
 assignments <- fread("data/assignments.csv") %>% 
-#fread("unzip -cq ../data/assignments.zip")   # works in Ubuntu
   mutate(course_item_type_desc = factor(course_item_type_desc), vis_b = ifelse(vis_tw==0, 0, 1), vis_before_attempt_tw_b = ifelse(vis_before_attempt_tw==0, 0, 1), vis_before_attempt_tw_b = factor(vis_before_attempt_tw_b)) %>% 
   group_by(course_item_id) %>% 
   mutate(difficulty =  sum(first_attempt == 0) / n()) %>% 
@@ -71,6 +64,7 @@ More: file 6.
 ```
 
 ```{r}
+system('7z x data/m10.zip -odata/.')
 m10 <- readRDS( "data/m10.rds")
 summary(m10)
 ```
@@ -82,6 +76,7 @@ summary(m10)
 ```
 
 ```{r}
+system('7z x data/m1.zip -odata/.')
 m1 <- readRDS( "data/m1.rds")
 summary(m1)
 ```
@@ -145,6 +140,7 @@ anova(m10, m1)
 ```
 
 ```{r}
+system('7z x data/m2.zip -odata/.')
 m2 <- readRDS("data/m2.rds")
 summary(m2)
 m20 <- summary(m2)
@@ -155,7 +151,7 @@ cat(sprintf("Probability of CFA if a student didn't visit a forum before %.2f.\n
 cat(sprintf("Probability of CFA if a student visited a forum at least once - %.2f\n\n", invlogit(m20$coefficients[1] + m20$coefficients[2])))
 ```
 
-####  Visualisation
+#### Visualisation
 
 ```{r, warning=FALSE}
 # cbind(c("yes", "no"), c(0.70, 0.69)) %>% ggplot(aes(x = assignments$vis_before_attempt_tw_b, y=c(0.70, 0.69))) +
@@ -178,5 +174,3 @@ assignments  %>%  ggplot(., aes(factor(vis_before_attempt_tw_b), fill = factor(f
 
 
 ```
-
-

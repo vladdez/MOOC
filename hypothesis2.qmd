@@ -31,6 +31,7 @@ library(mediation)
 library(utils)
 library(arm)
 
+
 remove_outliers <- function(x, na.rm = TRUE, ...) {
   qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
   H <- 1.5 * IQR(x, na.rm = na.rm)
@@ -44,15 +45,9 @@ remove_outliers <- function(x, na.rm = TRUE, ...) {
 
 ```{r, include=FALSE}
 wd <- getwd()
+system('7z x data/assignments.zip -odata/.')
 
-courses <- fread("data/courses.csv") %>%
-  mutate(visit_rate = round(vis_learner_b/ student_n, digits = 2), passing_rate = round(passing_rate, digits = 2)) 
-
-students <- fread("data/students.csv") %>%  mutate(duration = remove_outliers(duration))  
-students$vis_b <- factor(students$vis_b)
-
-assignments <- fread("data/assignments.csv") %>% 
-#fread("unzip -cq ../data/assignments.zip")   # works in Ubuntu
+assignments <- fread("data/assignments.csv") %>%    # works in Ubuntu
   mutate(course_item_type_desc = factor(course_item_type_desc), vis_b = ifelse(vis_tw==0, 0, 1), 
          vis_before_attempt_tw_b = ifelse(vis_before_attempt_tw==0, 0, 1), 
          vis_before_attempt_tw_b = factor(vis_before_attempt_tw_b), 
@@ -60,37 +55,45 @@ assignments <- fread("data/assignments.csv") %>%
   group_by(course_item_id) %>% 
   mutate(difficulty =  sum(first_attempt == 0) / n()) %>% 
   ungroup()  %>% dplyr::select(assignment_time, vis_b, difficulty, first_attempt, vis_before_attempt_tw_b, hse_user_id, course_item_name, course_item_type_id, attempts)
-
-#assignments <- assignments[c(1:10000), ]
-
 #tw <- assignments %>% filter(assignment_time < 116)  # delete observations over 3d quantile
-#rm(assignments)
 ```
-
 
 ## Hypothesis 2
 
 <!-- ### Model 3 -->
 
 <!-- ```{r} -->
+
 <!-- m3 <- glmer(vis_b ~ assignment_time + (1|course_item_name), family = "binomial", assignments) -->
+
 <!-- saveRDS(m3, "data/m3.rds") -->
 
 <!-- m3 <- readRDS("data/m3.rds") -->
+
 <!-- summary(m3) -->
+
 <!-- m30 <- summary(m3) -->
+
 <!-- cat(sprintf("Every additional minute of assignemnt interaction increase probability of attendance by %.2f.\n", invlogit(m30$coefficients[2]))) -->
+
 <!-- cat(sprintf("Every additional minute of assignemnt interaction increase odds of attendance by %.2f.\n", exp(m30$coefficients[2]))) -->
+
 <!-- ``` -->
 
 <!-- ### Model 4 -->
 
 <!-- ```{r} -->
+
 <!-- m4 <- glm(vis_b ~ attempts, family = "binomial", assignments) -->
+
 <!-- summary(m4) -->
+
 <!-- m40 <- summary(m4) -->
+
 <!-- cat(sprintf("Every additional attempt increase probability of attendance by %.4f.\n", invlogit(m40$coefficients[2]))) -->
+
 <!-- cat(sprintf("Every additional attempt interaction increase odds of attendance by %.2f.\n", exp(m40$coefficients[2]))) -->
+
 <!-- ``` -->
 
 ```{r}
@@ -101,10 +104,9 @@ cat(sprintf("Every additional difficulty point increase probability of attendanc
 cat(sprintf("Every additional difficulty point increase odds of attendance by %.2f.\n", exp(m50$coefficients[2])))
 ```
 
-
 ### Combination
 
-What if for moderation analyses I take just difficulty as moderator? 
+What if for moderation analyses I take just difficulty as moderator?
 
 ## Mediation analyses
 
@@ -117,8 +119,6 @@ tw2 <- assignments %>% group_by(course_item_name) %>% summarise(difficulty = med
                                                   first_attempt = median(first_attempt)) 
 ```
 
-
-
 ```{r}
 # Step 1: X ~ Y
 fit.totaleffect <- glm(data = data.table(tw1), first_attempt ~ 1 + vis_before_attempt_tw_b , family = "binomial") 
@@ -127,7 +127,7 @@ summary(fit.totaleffect)
 
 # Step 2: M ~ Y
 fit.mediator = glm(data = data.table(tw1), vis_before_attempt_tw_b ~ 1 + difficulty , family = "binomial") 
-saveRDS(fit.mediator, "data/fit_mediator.rds")
+#saveRDS(fit.mediator, "data/fit_mediator.rds")
 #fit.mediator <- readRDS("data/fit_mediator.rds")
 summary(fit.mediator)
 # there is an effect
@@ -191,8 +191,6 @@ cat(sprintf("Average direct effect is %.4f.\n\n",  summary(results_m2)$z0))
 cat(sprintf("Total effect is %.4f.\n\n", summary(results_m2)$tau.coef))
 
 ```
-
-
 
 ### type
 
@@ -270,57 +268,75 @@ cat(sprintf("Total effect is %.4f.\n\n", summary(results_m2)$tau.coef))
 <!-- ### difficulty -->
 
 <!-- ```{julia} -->
+
 <!-- # hierarchical moderator logistic model -->
+
 <!-- # or moderator GLMM or GLMM with interaction -->
 
 <!-- using Pkg; Pkg.activate(".") -->
+
 <!-- Pkg.add(["MixedModels","JellyMe4"]) -->
 
 <!-- using MixedModels -->
+
 <!-- using JellyMe4 -->
+
 <!-- jl_assignments = rcopy(R"tw") -->
+
 <!-- m1 = fit(MixedModel, @formula( first_attempt ~ 1 + vis_before_attempt_tw_b * difficulty+ (1 + vis_before_attempt_tw_b * difficulty | hse_user_id) +  (1 | course_item_name)), jl_assignments) -->
+
 <!-- m1 -->
+
 <!-- #jl_m = (m, jl_assignments); -->
+
 <!-- #@rput jl_m; -->
 
 <!-- ``` -->
 
-
 <!-- ```{julia} -->
+
 <!-- m1 -->
+
 <!-- ``` -->
 
 <!-- ### type -->
 
 <!-- ```{julia} -->
+
 <!-- # hierarchical moderator logistic model -->
+
 <!-- # or moderator GLMM or GLMM with interaction -->
 
 <!-- using Pkg; Pkg.activate(".") -->
+
 <!-- Pkg.add(["MixedModels","JellyMe4"]) -->
 
 <!-- using MixedModels -->
-<!-- using JellyMe4 -->
-<!-- jl_assignments = rcopy(R"tw") -->
-<!-- m2 = fit(MixedModel, @formula( first_attempt ~ 1 + vis_before_attempt_tw_b * course_item_type_id+ (1 + vis_before_attempt_tw_b * course_item_type_id | hse_user_id) +  (1 | course_item_name)), jl_assignments) -->
-<!-- m2 -->
 
+<!-- using JellyMe4 -->
+
+<!-- jl_assignments = rcopy(R"tw") -->
+
+<!-- m2 = fit(MixedModel, @formula( first_attempt ~ 1 + vis_before_attempt_tw_b * course_item_type_id+ (1 + vis_before_attempt_tw_b * course_item_type_id | hse_user_id) +  (1 | course_item_name)), jl_assignments) -->
+
+<!-- m2 -->
 
 <!-- ``` -->
 
 <!-- ## trash -->
 
 <!-- ```{r} -->
+
 <!-- m_bene  = glmer(data = data.table(tw), first_attempt ~ 1 + vis_before_attempt_tw_b * difficulty+ (1 + vis_before_attempt_tw_b * difficulty || hse_user_id) +      (1 | course_item_name), family = "binomial") -->
+
 <!-- summary(m_bene)  -->
+
 <!-- ``` -->
 
 <!-- ```{r} -->
+
 <!-- glm(data = data.table(tw), first_attempt ~ 1 + vis_before_attempt_tw_b , family = "binomial")  -->
+
 <!-- ``` -->
-
-
-
 
 https://towardsdatascience.com/doing-and-reporting-your-first-mediation-analysis-in-r-2fe423b92171

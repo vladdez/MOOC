@@ -37,13 +37,7 @@ remove_outliers <- function(x, na.rm = TRUE, ...) {
 
 ```{r, include=FALSE}
 wd <- getwd()
-
-courses <- fread("data/courses.csv") %>%
-  mutate(visit_rate = round(vis_learner_b/ student_n, digits = 2), passing_rate = round(passing_rate, digits = 2)) 
-
-students <- fread("data/students.csv") %>%  mutate(duration = remove_outliers(duration))  
-students$vis_b <- factor(students$vis_b)
-
+system('7z x data/assignments.zip -odata/.')
 assignments <- fread("data/assignments.csv") %>% 
 #fread("unzip -cq ../data/assignments.zip")   # works in Ubuntu
   mutate(course_item_type_desc = factor(course_item_type_desc), vis_b = ifelse(vis_tw==0, 0, 1), vis_before_attempt_tw_b = ifelse(vis_before_attempt_tw==0, 0, 1), vis_before_attempt_tw_b = factor(vis_before_attempt_tw_b)) %>% 

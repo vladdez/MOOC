@@ -439,16 +439,16 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                          Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)           -0.00273     -0.00438         0.00  &lt;2e-16 ***
-ACME (treated)           -0.00176     -0.00271         0.00  &lt;2e-16 ***
-ADE (control)            -0.97428     -0.97824        -0.97  &lt;2e-16 ***
-ADE (treated)            -0.97331     -0.97712        -0.97  &lt;2e-16 ***
-Total Effect             -0.97604     -0.97971        -0.97  &lt;2e-16 ***
-Prop. Mediated (control)  0.00277      0.00129         0.00  &lt;2e-16 ***
-Prop. Mediated (treated)  0.00180      0.00090         0.00  &lt;2e-16 ***
-ACME (average)           -0.00224     -0.00354         0.00  &lt;2e-16 ***
-ADE (average)            -0.97379     -0.97770        -0.97  &lt;2e-16 ***
-Prop. Mediated (average)  0.00228      0.00111         0.00  &lt;2e-16 ***
+ACME (control)           -0.00275     -0.00440         0.00  &lt;2e-16 ***
+ACME (treated)           -0.00177     -0.00271         0.00  &lt;2e-16 ***
+ADE (control)            -0.97439     -0.97804        -0.97  &lt;2e-16 ***
+ADE (treated)            -0.97341     -0.97720        -0.97  &lt;2e-16 ***
+Total Effect             -0.97616     -0.97961        -0.97  &lt;2e-16 ***
+Prop. Mediated (control)  0.00281      0.00121         0.00  &lt;2e-16 ***
+Prop. Mediated (treated)  0.00181      0.00084         0.00  &lt;2e-16 ***
+ACME (average)           -0.00226     -0.00351         0.00  &lt;2e-16 ***
+ADE (average)            -0.97390     -0.97764        -0.97  &lt;2e-16 ***
+Prop. Mediated (average)  0.00231      0.00103         0.00  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -579,16 +579,16 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                           Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)            4.57e-06     0.00e+00            0   0.012 *  
-ACME (treated)            3.91e-04     0.00e+00            0   0.010 ** 
-ADE (control)            -1.00e+00    -1.00e+00           -1  &lt;2e-16 ***
-ADE (treated)            -1.00e+00    -1.00e+00           -1  &lt;2e-16 ***
-Total Effect             -1.00e+00    -1.00e+00           -1  &lt;2e-16 ***
-Prop. Mediated (control)  0.00e+00     0.00e+00            0   1.000    
-Prop. Mediated (treated)  0.00e+00     0.00e+00            0   1.000    
-ACME (average)            1.98e-04     0.00e+00            0   0.012 *  
-ADE (average)            -1.00e+00    -1.00e+00           -1  &lt;2e-16 ***
-Prop. Mediated (average)  0.00e+00     0.00e+00            0   1.000    
+ACME (control)            0.000174     0.000000            0   0.012 *  
+ACME (treated)            0.000237     0.000000            0   0.010 ** 
+ADE (control)            -0.999221    -1.000000           -1  &lt;2e-16 ***
+ADE (treated)            -0.999158    -1.000000           -1  &lt;2e-16 ***
+Total Effect             -0.998984    -1.000000           -1   0.002 ** 
+Prop. Mediated (control)  0.000000     0.000000            0   1.000    
+Prop. Mediated (treated)  0.000000     0.000000            0   1.000    
+ACME (average)            0.000205     0.000000            0   0.012 *  
+ADE (average)            -0.999189    -1.000000           -1  &lt;2e-16 ***
+Prop. Mediated (average)  0.000000     0.000000            0   1.000    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -604,7 +604,7 @@ Simulations: 1000 </code></pre>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Average causal mediation effect (indirect effect) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Average causal mediation effect (indirect effect) is -0.00273.
+<pre><code>Average causal mediation effect (indirect effect) is -0.00275.
 This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
 <details>
@@ -612,14 +612,14 @@ This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goe
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Average direct effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Average direct effect is -0.9743.</code></pre>
+<pre><code>Average direct effect is -0.9744.</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Total effect is -0.9760.</code></pre>
+<pre><code>Total effect is -0.9762.</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -628,7 +628,7 @@ This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goe
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Average causal mediation effect (indirect effect) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Average causal mediation effect (indirect effect) is 0.00000.
+<pre><code>Average causal mediation effect (indirect effect) is 0.00017.
 This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
 <details>
@@ -636,14 +636,14 @@ This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goe
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Average direct effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m2)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Average direct effect is -1.0000.</code></pre>
+<pre><code>Average direct effect is -0.9992.</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Total effect is -0.9996.</code></pre>
+<pre><code>Total effect is -0.9990.</code></pre>
 </div>
 </div>
 </section>
@@ -772,16 +772,16 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                          Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)            -0.0099      -0.0122        -0.01  &lt;2e-16 ***
-ACME (treated)            -0.0102      -0.0125        -0.01  &lt;2e-16 ***
-ADE (control)             -0.0101      -0.0203         0.00    0.03 *  
-ADE (treated)             -0.0104      -0.0209         0.00    0.03 *  
-Total Effect              -0.0203      -0.0303        -0.01  &lt;2e-16 ***
-Prop. Mediated (control)   0.4878       0.3064         0.94  &lt;2e-16 ***
-Prop. Mediated (treated)   0.5056       0.3258         0.94  &lt;2e-16 ***
-ACME (average)            -0.0101      -0.0124        -0.01  &lt;2e-16 ***
-ADE (average)             -0.0102      -0.0206         0.00    0.03 *  
-Prop. Mediated (average)   0.4967       0.3173         0.94  &lt;2e-16 ***
+ACME (control)           -0.00990     -0.01219        -0.01  &lt;2e-16 ***
+ACME (treated)           -0.01023     -0.01261        -0.01  &lt;2e-16 ***
+ADE (control)            -0.00998     -0.01921         0.00   0.042 *  
+ADE (treated)            -0.01031     -0.01989         0.00   0.042 *  
+Total Effect             -0.02021     -0.02944        -0.01  &lt;2e-16 ***
+Prop. Mediated (control)  0.48802      0.31003         0.95  &lt;2e-16 ***
+Prop. Mediated (treated)  0.50539      0.32953         0.95  &lt;2e-16 ***
+ACME (average)           -0.01006     -0.01241        -0.01  &lt;2e-16 ***
+ADE (average)            -0.01014     -0.01954         0.00   0.042 *  
+Prop. Mediated (average)  0.49670      0.31984         0.95  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -906,16 +906,16 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                          Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)           -0.00994     -0.01227        -0.01  &lt;2e-16 ***
-ACME (treated)           -0.01028     -0.01258        -0.01  &lt;2e-16 ***
-ADE (control)            -0.01006     -0.01905         0.00    0.02 *  
-ADE (treated)            -0.01040     -0.01963         0.00    0.02 *  
-Total Effect             -0.02034     -0.02926        -0.01  &lt;2e-16 ***
-Prop. Mediated (control)  0.49406      0.30785         0.86  &lt;2e-16 ***
-Prop. Mediated (treated)  0.51091      0.33026         0.87  &lt;2e-16 ***
-ACME (average)           -0.01011     -0.01245        -0.01  &lt;2e-16 ***
-ADE (average)            -0.01023     -0.01934         0.00    0.02 *  
-Prop. Mediated (average)  0.50248      0.31952         0.87  &lt;2e-16 ***
+ACME (control)           -0.00997     -0.01217        -0.01  &lt;2e-16 ***
+ACME (treated)           -0.01030     -0.01257        -0.01  &lt;2e-16 ***
+ADE (control)            -0.00998     -0.01999         0.00    0.04 *  
+ADE (treated)            -0.01031     -0.02066         0.00    0.04 *  
+Total Effect             -0.02027     -0.03021        -0.01  &lt;2e-16 ***
+Prop. Mediated (control)  0.49620      0.30818         0.93  &lt;2e-16 ***
+Prop. Mediated (treated)  0.51227      0.32986         0.93  &lt;2e-16 ***
+ACME (average)           -0.01013     -0.01237        -0.01  &lt;2e-16 ***
+ADE (average)            -0.01014     -0.02032         0.00    0.04 *  
+Prop. Mediated (average)  0.50424      0.31918         0.93  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -939,14 +939,14 @@ This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goe
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Average direct effect of course type is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Average direct effect of course type is -0.0101.</code></pre>
+<pre><code>Average direct effect of course type is -0.0100.</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Total effect is -0.0203.</code></pre>
+<pre><code>Total effect is -0.0202.</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -955,7 +955,7 @@ This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goe
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Average causal mediation effect (indirect effect) of forum attendance is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Average causal mediation effect (indirect effect) of forum attendance is -0.00994.
+<pre><code>Average causal mediation effect (indirect effect) of forum attendance is -0.00997.
 This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
 <details>
@@ -963,7 +963,7 @@ This is the indirect effect of the IV (item difficulty) on the DV (CFA) that goe
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Average direct effect of course type is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m2)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Average direct effect of course type is -0.0101.</code></pre>
+<pre><code>Average direct effect of course type is -0.0100.</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
