@@ -1,0 +1,36 @@
+project:
+  type: website
+
+# "Forum visit and study achievments nonblended online courses"
+
+website:
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - section: "Project description"
+        contents:
+          - about.qmd
+      - section: "Analyses"
+        contents:
+          - text: "Hypotheses 1"
+            file: hypothesis1.qmd
+          - text: "Hypotheses 2"
+            file: hypothesis2.qmd
+          - text: "Plots"
+            file: plots.qmd
+
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+
+
+
+
+
+

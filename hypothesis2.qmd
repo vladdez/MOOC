@@ -1,0 +1,326 @@
+---
+title: "Hypothesis"
+format:
+  html:
+    toc: true
+    html-math-method: katex
+    css: styles.css
+    code-fold: true
+    code-summary: "Show the code"
+editor: visual
+#jupyter: julia-1.8
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+```{r, message= FALSE, warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(dplyr)
+library(data.table)
+library(lme4)
+library(ggplot2)
+library(pscl) # for odTest
+library(arm)
+library(sjPlot)
+library(rstatix)
+library(car)
+library(glue)
+library(mediation)
+library(utils)
+library(arm)
+
+remove_outliers <- function(x, na.rm = TRUE, ...) {
+  qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
+  H <- 1.5 * IQR(x, na.rm = na.rm)
+  y <- x
+  y[x < (qnt[1] - H)] <- NA
+  y[x > (qnt[2] + H)] <- NA
+  y
+}
+
+```
+
+```{r, include=FALSE}
+wd <- getwd()
+
+courses <- fread("data/courses.csv") %>%
+  mutate(visit_rate = round(vis_learner_b/ student_n, digits = 2), passing_rate = round(passing_rate, digits = 2)) 
+
+students <- fread("data/students.csv") %>%  mutate(duration = remove_outliers(duration))  
+students$vis_b <- factor(students$vis_b)
+
+assignments <- fread("data/assignments.csv") %>% 
+#fread("unzip -cq ../data/assignments.zip")   # works in Ubuntu
+  mutate(course_item_type_desc = factor(course_item_type_desc), vis_b = ifelse(vis_tw==0, 0, 1), 
+         vis_before_attempt_tw_b = ifelse(vis_before_attempt_tw==0, 0, 1), 
+         vis_before_attempt_tw_b = factor(vis_before_attempt_tw_b), 
+         course_item_type_id = factor(ifelse(course_item_type_id=="106", 0, 1))) %>% # 106 = quiz
+  group_by(course_item_id) %>% 
+  mutate(difficulty =  sum(first_attempt == 0) / n()) %>% 
+  ungroup()  %>% dplyr::select(assignment_time, vis_b, difficulty, first_attempt, vis_before_attempt_tw_b, hse_user_id, course_item_name, course_item_type_id, attempts)
+
+#assignments <- assignments[c(1:10000), ]
+
+#tw <- assignments %>% filter(assignment_time < 116)  # delete observations over 3d quantile
+#rm(assignments)
+```
+
+
+## Hypothesis 2
+
+<!-- ### Model 3 -->
+
+<!-- ```{r} -->
+<!-- m3 <- glmer(vis_b ~ assignment_time + (1|course_item_name), family = "binomial", assignments) -->
+<!-- saveRDS(m3, "data/m3.rds") -->
+
+<!-- m3 <- readRDS("data/m3.rds") -->
+<!-- summary(m3) -->
+<!-- m30 <- summary(m3) -->
+<!-- cat(sprintf("Every additional minute of assignemnt interaction increase probability of attendance by %.2f.\n", invlogit(m30$coefficients[2]))) -->
+<!-- cat(sprintf("Every additional minute of assignemnt interaction increase odds of attendance by %.2f.\n", exp(m30$coefficients[2]))) -->
+<!-- ``` -->
+
+<!-- ### Model 4 -->
+
+<!-- ```{r} -->
+<!-- m4 <- glm(vis_b ~ attempts, family = "binomial", assignments) -->
+<!-- summary(m4) -->
+<!-- m40 <- summary(m4) -->
+<!-- cat(sprintf("Every additional attempt increase probability of attendance by %.4f.\n", invlogit(m40$coefficients[2]))) -->
+<!-- cat(sprintf("Every additional attempt interaction increase odds of attendance by %.2f.\n", exp(m40$coefficients[2]))) -->
+<!-- ``` -->
+
+```{r}
+m5 <- glm(vis_b ~ difficulty, family = "binomial", assignments)
+summary(m5)
+m50 <- summary(m5)
+cat(sprintf("Every additional difficulty point increase probability of attendance by  %.4f.\n", invlogit(m50$coefficients[2])))
+cat(sprintf("Every additional difficulty point increase odds of attendance by %.2f.\n", exp(m50$coefficients[2])))
+```
+
+
+### Combination
+
+What if for moderation analyses I take just difficulty as moderator? 
+
+## Mediation analyses
+
+### diffculty
+
+```{r}
+tw1 <- assignments %>% group_by(hse_user_id) %>% summarise(difficulty = median(difficulty), vis_before_attempt_tw_b = median(as.numeric(vis_before_attempt_tw_b) - 1), 
+                                                  first_attempt = median(first_attempt)) 
+tw2 <- assignments %>% group_by(course_item_name) %>% summarise(difficulty = median(difficulty), vis_before_attempt_tw_b = median(as.numeric(vis_before_attempt_tw_b) - 1), 
+                                                  first_attempt = median(first_attempt)) 
+```
+
+
+
+```{r}
+# Step 1: X ~ Y
+fit.totaleffect <- glm(data = data.table(tw1), first_attempt ~ 1 + vis_before_attempt_tw_b , family = "binomial") 
+summary(fit.totaleffect)
+# there is an effect
+
+# Step 2: M ~ Y
+fit.mediator = glm(data = data.table(tw1), vis_before_attempt_tw_b ~ 1 + difficulty , family = "binomial") 
+saveRDS(fit.mediator, "data/fit_mediator.rds")
+#fit.mediator <- readRDS("data/fit_mediator.rds")
+summary(fit.mediator)
+# there is an effect
+
+# Step 3: X + M ~ Y
+fit.dv = glm(data = data.table(tw1), first_attempt ~ 1 + vis_before_attempt_tw_b + difficulty, family = "binomial")
+#saveRDS(fit.dv, "data/fit_dv.rds")
+#fit.dv <- readRDS("data/fit_dv.rds")
+summary(fit.dv)
+
+# there is an effect, but mediation is incomplete
+
+# Step 4: Run the mediation analysis
+
+results_m1 = mediate(fit.mediator, fit.dv, treat='difficulty', mediator='vis_before_attempt_tw_b')
+#saveRDS(results_m1, "data/results_m1.rds")
+# Step 5: View the mediation results
+summary(results_m1)
+```
+
+```{r}
+# Step 1: X ~ Y
+fit.totaleffect <- glm(data = data.table(tw2), first_attempt ~ 1 + vis_before_attempt_tw_b , family = "binomial") 
+summary(fit.totaleffect)
+# there is an effect
+
+# Step 2: M ~ Y
+fit.mediator = glm(data = data.table(tw2), vis_before_attempt_tw_b ~ 1 + difficulty , family = "binomial") 
+saveRDS(fit.mediator, "data/fit_mediator.rds")
+#fit.mediator <- readRDS("data/fit_mediator.rds")
+summary(fit.mediator)
+# there is an effect
+
+# Step 3: X + M ~ Y
+fit.dv = glm(data = data.table(tw2), first_attempt ~ 1 + vis_before_attempt_tw_b + difficulty, family = "binomial")
+#saveRDS(fit.dv, "data/fit_dv.rds")
+#fit.dv <- readRDS("data/fit_dv.rds")
+summary(fit.dv)
+
+# there is an effect, but mediation is incomplete
+
+# Step 4: Run the mediation analysis
+
+results_m2 = mediate(fit.mediator, fit.dv, treat='difficulty', mediator='vis_before_attempt_tw_b')
+#saveRDS(results_m1, "data/results_m1.rds")
+# Step 5: View the mediation results
+summary(results_m2)
+```
+
+```{r}
+cat(sprintf("Average causal mediation effect (indirect effect) is %.5f.\nThis is the indirect effect of the IV (item difficulty) on the DV (CFA) that goes through the mediator (forum attendance).\n\n", summary(results_m1)$d0))
+
+cat(sprintf("Average direct effect is %.4f.\n\n",  summary(results_m1)$z0))
+cat(sprintf("Total effect is %.4f.\n\n", summary(results_m1)$tau.coef))
+```
+
+```{r}
+cat(sprintf("Average causal mediation effect (indirect effect) is %.5f.\nThis is the indirect effect of the IV (item difficulty) on the DV (CFA) that goes through the mediator (forum attendance).\n\n", summary(results_m2)$d0))
+
+cat(sprintf("Average direct effect is %.4f.\n\n",  summary(results_m2)$z0))
+cat(sprintf("Total effect is %.4f.\n\n", summary(results_m2)$tau.coef))
+
+```
+
+
+
+### type
+
+```{r}
+tw1 <- assignments %>% group_by(hse_user_id) %>% summarise(course_item_type_id = median(as.numeric(course_item_type_id) - 1), vis_before_attempt_tw_b = median(as.numeric(vis_before_attempt_tw_b) - 1), first_attempt = median(first_attempt)) 
+
+tw2 <- assignments %>% group_by(course_item_name) %>% summarise(course_item_type_id = median(as.numeric(course_item_type_id) - 1), vis_before_attempt_tw_b = median(as.numeric(vis_before_attempt_tw_b) - 1), first_attempt = median(first_attempt)) 
+```
+
+```{r}
+# Step 1: X ~ Y
+fit.totaleffect <- glm(data = data.table(tw1), first_attempt ~ 1 + course_item_type_id , family = "binomial") 
+summary(fit.totaleffect)
+# there is an effect
+
+# Step 2: M ~ Y
+fit.mediator = glm(data = data.table(tw1), vis_before_attempt_tw_b ~ 1 + course_item_type_id , family = "binomial") 
+summary(fit.mediator)
+# there is an effect
+
+# Step 3: X + M ~ Y
+fit.dv = glm(data = data.table(tw1), first_attempt ~ 1 + vis_before_attempt_tw_b + course_item_type_id, family = "binomial")
+summary(fit.dv)
+
+# there is an effect, but mediation is incomplete
+
+# Step 4: Run the mediation analysis
+
+results_m1 = mediate(fit.mediator, fit.dv, treat='course_item_type_id', mediator='vis_before_attempt_tw_b')
+summary(results_m1)
+
+```
+
+```{r}
+# Step 1: X ~ Y
+fit.totaleffect <- glm(data = data.table(tw1), first_attempt ~ 1 + course_item_type_id , family = "binomial") 
+summary(fit.totaleffect)
+# there is an effect
+
+# Step 2: M ~ Y
+fit.mediator = glm(data = data.table(tw1), vis_before_attempt_tw_b ~ 1 + course_item_type_id , family = "binomial") 
+summary(fit.mediator)
+# there is an effect
+
+# Step 3: X + M ~ Y
+fit.dv = glm(data = data.table(tw1), first_attempt ~ 1 + vis_before_attempt_tw_b + course_item_type_id, family = "binomial")
+summary(fit.dv)
+
+# there is an effect, but mediation is incomplete
+
+# Step 4: Run the mediation analysis
+
+results_m2 = mediate(fit.mediator, fit.dv, treat='course_item_type_id', mediator='vis_before_attempt_tw_b')
+summary(results_m2)
+
+```
+
+```{r}
+cat(sprintf("Average causal mediation effect (indirect effect) of forum attendance course type is %.5f.\nThis is the indirect effect of the IV (item difficulty) on the DV (CFA) that goes through the mediator (forum attendance).\n\n", summary(results_m1)$d0))
+
+cat(sprintf("Average direct effect of course type is %.4f.\n\n",  summary(results_m1)$z0))
+cat(sprintf("Total effect is %.4f.\n\n", summary(results_m1)$tau.coef))
+```
+
+```{r}
+cat(sprintf("Average causal mediation effect (indirect effect) of forum attendance is %.5f.\nThis is the indirect effect of the IV (item difficulty) on the DV (CFA) that goes through the mediator (forum attendance).\n\n", summary(results_m2)$d0))
+
+cat(sprintf("Average direct effect of course type is %.4f.\n\n",  summary(results_m2)$z0))
+cat(sprintf("Total effect is %.4f.\n\n", summary(results_m2)$tau.coef))
+
+```
+
+<!-- ## Moderator analyses -->
+
+<!-- ### difficulty -->
+
+<!-- ```{julia} -->
+<!-- # hierarchical moderator logistic model -->
+<!-- # or moderator GLMM or GLMM with interaction -->
+
+<!-- using Pkg; Pkg.activate(".") -->
+<!-- Pkg.add(["MixedModels","JellyMe4"]) -->
+
+<!-- using MixedModels -->
+<!-- using JellyMe4 -->
+<!-- jl_assignments = rcopy(R"tw") -->
+<!-- m1 = fit(MixedModel, @formula( first_attempt ~ 1 + vis_before_attempt_tw_b * difficulty+ (1 + vis_before_attempt_tw_b * difficulty | hse_user_id) +  (1 | course_item_name)), jl_assignments) -->
+<!-- m1 -->
+<!-- #jl_m = (m, jl_assignments); -->
+<!-- #@rput jl_m; -->
+
+<!-- ``` -->
+
+
+<!-- ```{julia} -->
+<!-- m1 -->
+<!-- ``` -->
+
+<!-- ### type -->
+
+<!-- ```{julia} -->
+<!-- # hierarchical moderator logistic model -->
+<!-- # or moderator GLMM or GLMM with interaction -->
+
+<!-- using Pkg; Pkg.activate(".") -->
+<!-- Pkg.add(["MixedModels","JellyMe4"]) -->
+
+<!-- using MixedModels -->
+<!-- using JellyMe4 -->
+<!-- jl_assignments = rcopy(R"tw") -->
+<!-- m2 = fit(MixedModel, @formula( first_attempt ~ 1 + vis_before_attempt_tw_b * course_item_type_id+ (1 + vis_before_attempt_tw_b * course_item_type_id | hse_user_id) +  (1 | course_item_name)), jl_assignments) -->
+<!-- m2 -->
+
+
+<!-- ``` -->
+
+<!-- ## trash -->
+
+<!-- ```{r} -->
+<!-- m_bene  = glmer(data = data.table(tw), first_attempt ~ 1 + vis_before_attempt_tw_b * difficulty+ (1 + vis_before_attempt_tw_b * difficulty || hse_user_id) +      (1 | course_item_name), family = "binomial") -->
+<!-- summary(m_bene)  -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- glm(data = data.table(tw), first_attempt ~ 1 + vis_before_attempt_tw_b , family = "binomial")  -->
+<!-- ``` -->
+
+
+
+
+https://towardsdatascience.com/doing-and-reporting-your-first-mediation-analysis-in-r-2fe423b92171

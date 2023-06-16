@@ -1,0 +1,97 @@
+---
+title: "Plots"
+format:
+  html:
+    toc: true
+    html-math-method: katex
+    css: styles.css
+    code-fold: true
+    code-summary: "Show the code"
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(dplyr)
+library(data.table)
+library(lme4)
+library(ggplot2)
+library(pscl) # for odTest
+library(arm)
+library(sjPlot)
+library(rstatix)
+library(car)
+library(glue)
+library(extrafont)
+
+remove_outliers <- function(x, na.rm = TRUE, ...) {
+  qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
+  H <- 1.5 * IQR(x, na.rm = na.rm)
+  y <- x
+  y[x < (qnt[1] - H)] <- NA
+  y[x > (qnt[2] + H)] <- NA
+  y
+}
+
+```
+
+```{r, include=FALSE}
+wd <- getwd()
+
+courses <- fread("data/courses.csv") %>%
+  mutate(visit_rate = round(vis_learner_b/ student_n, digits = 2), passing_rate = round(passing_rate, digits = 2)) 
+
+students <- fread("data/students.csv") %>%  mutate(duration = remove_outliers(duration))  
+students$vis_b <- factor(students$vis_b)
+
+assignments <- fread("data/assignments.csv") %>% 
+#fread("unzip -cq ../data/assignments.zip")   # works in Ubuntu
+  mutate(course_item_type_desc = factor(course_item_type_desc), vis_b = ifelse(vis_tw==0, 0, 1), vis_before_attempt_tw_b = ifelse(vis_before_attempt_tw==0, 0, 1), vis_before_attempt_tw_b = factor(vis_before_attempt_tw_b)) %>% 
+  group_by(course_item_id) %>% 
+  mutate(difficulty =  sum(first_attempt == 0) / n()) %>% 
+  ungroup() 
+
+#assignments <- assignments[c(1:10000), ]
+
+tw <- assignments %>% filter(assignment_time < 116) 
+```
+
+## Hypothesis 1
+
+1.0431
+
+```{r}
+windowsFonts(`Segoe UI` = windowsFont('Segoe UI'))
+h1 <- data.frame(vis_before_attempt_tw_b=c("No attendance","Attendance","Attendance","No attendance"), course_item_type_desc = c("quiz","programming","quiz","programming"),
+                     results = c(0.7199075, 0.6692041, 0.6863616, 0.6823420)) %>% mutate( 
+                 sdsl = invlogit(results - 0.6324), # variance by students lower
+                 sdsh = invlogit(results + 0.6324), # ans higher
+                 sdcl = invlogit(results - 1.0431), # variance by courses lower
+                 sdch = invlogit(results + 1.0431) # ans higher
+                 )
+colours = c("#f9a65a", "#599ad3")
+
+ggplot(h1, aes(x = course_item_type_desc, y = results, fill = vis_before_attempt_tw_b)) + 
+  geom_col(stat='identity', width = 0.6, position = position_dodge(0.7)) +
+  geom_text(aes(label=round(results, digits =2)), vjust = -0.7, position=position_dodge(width=0.4)) +
+  geom_errorbar(aes(ymin=sdsl, ymax=sdsh), width=.2,
+                 position=position_dodge(.8), color = 'red') + 
+  geom_errorbar(aes(ymin=sdcl, ymax=sdch), width=.2,
+                 position=position_dodge(1.1), color = 'blue') + 
+  geom_line(aes(x=course_item_type_desc, y=0, color='accross courses'))+
+  geom_line(aes(x=course_item_type_desc, y=0, color='accross students'))+
+    scale_fill_manual(values=colours) +
+  labs(x = "Type of an assignment", y = "Probability of Correctness on First Attempt", 
+       fill="Forum attendance\nduring first attempt", color = 'Variance')+ 
+    scale_y_continuous(breaks = seq(0, 1, len = 5), limits = c(0, 1)) + theme_classic() + 
+    theme(
+  axis.title.x = element_text(size=10),
+  axis.title.y = element_text(size=10), 
+  text=element_text(family="Segoe UI")
+       ) +
+    guides(colour = guide_legend(order = 2), 
+              fill = guide_legend(order = 1)) +
+  scale_color_manual(values=c("red","blue")) 
+# colors, fonts
+
+```

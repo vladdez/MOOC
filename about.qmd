@@ -1,0 +1,8 @@
+---
+title: "About"
+---
+
+Hello! 
+
+here you can find analyses of navigational data of 58 Coursera courses.
+We aimed to find out relationship between study achievments and forum visits. 
