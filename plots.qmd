@@ -89,3 +89,82 @@ ggplot(h1, aes(x = course_item_type_desc, y = results, fill = vis_before_attempt
 # colors, fonts
 
 ```
+
+
+
+<!-- ## Moderator analyses -->
+
+<!-- ### difficulty -->
+
+<!-- ```{julia} -->
+
+
+<!-- # hierarchical moderator logistic model -->
+
+<!-- # or moderator GLMM or GLMM with interaction -->
+
+<!-- using Pkg; Pkg.activate(".") -->
+
+<!-- Pkg.add(["MixedModels","JellyMe4"]) -->
+
+<!-- using MixedModels -->
+
+<!-- using JellyMe4 -->
+
+<!-- jl_assignments = rcopy(R"tw") -->
+
+<!-- m1 = fit(MixedModel, @formula( CFA ~ 1 + forum_attendance_tw * difficulty+ (1 + forum_attendance_tw * difficulty | hse_user_id) +  (1 | course_item_name)), jl_assignments) -->
+
+<!-- m1 -->
+
+<!-- #jl_m = (m, jl_assignments); -->
+
+<!-- #@rput jl_m; -->
+
+<!-- ``` -->
+
+<!-- ```{julia} -->
+
+<!-- m1 -->
+
+<!-- ``` -->
+
+<!-- ### type -->
+
+<!-- ```{julia} -->
+
+<!-- # hierarchical moderator logistic model -->
+
+<!-- # or moderator GLMM or GLMM with interaction -->
+
+<!-- using Pkg; Pkg.activate(".") -->
+
+<!-- Pkg.add(["MixedModels","JellyMe4"]) -->
+
+<!-- using MixedModels -->
+
+<!-- using JellyMe4 -->
+
+<!-- jl_assignments = rcopy(R"tw") -->
+
+<!-- m2 = fit(MixedModel, @formula( CFA ~ 1 + forum_attendance_tw * course_item_type_id+ (1 + forum_attendance_tw * course_item_type_id | hse_user_id) +  (1 | course_item_name)), jl_assignments) -->
+
+<!-- m2 -->
+
+<!-- ``` -->
+
+<!-- ## trash -->
+
+<!-- ```{r} -->
+
+<!-- m_bene  = glmer(data = data.table(tw), CFA ~ 1 + forum_attendance_tw * difficulty+ (1 + forum_attendance_tw * difficulty || hse_user_id) +      (1 | course_item_name), family = "binomial") -->
+
+<!-- summary(m_bene)  -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+
+<!-- glm(data = data.table(tw), CFA ~ 1 + forum_attendance_tw , family = "binomial")  -->
+
+<!-- ``` -->

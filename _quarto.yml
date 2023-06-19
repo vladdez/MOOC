@@ -1,5 +1,6 @@
 project:
   type: website
+  output-dir: docs
 
 # "Forum visit and study achievments nonblended online courses"
 

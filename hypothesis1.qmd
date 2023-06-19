@@ -1,5 +1,5 @@
 ---
-title: "Hypothesis"
+title: "Hypothesis 1"
 format:
   html:
     toc: true
@@ -42,83 +42,104 @@ remove_outliers <- function(x, na.rm = TRUE, ...) {
 wd <- getwd()
 system('7z x data/assignments.zip -odata/.')
 assignments <- fread("data/assignments.csv") %>% 
-  mutate(course_item_type_desc = factor(course_item_type_desc), vis_b = ifelse(vis_tw==0, 0, 1), vis_before_attempt_tw_b = ifelse(vis_before_attempt_tw==0, 0, 1), vis_before_attempt_tw_b = factor(vis_before_attempt_tw_b)) %>% 
+  mutate(course_item_type_desc = factor(course_item_type_desc), 
+         vis_b = ifelse(vis_tw==0, 0, 1), 
+         vis_before_attempt_tw_b = ifelse(vis_before_attempt_tw==0, 0, 1),
+         vis_before_attempt_tw_b = factor(vis_before_attempt_tw_b)) %>% 
   group_by(course_item_id) %>% 
   mutate(difficulty =  sum(first_attempt == 0) / n()) %>% 
+  dplyr::rename(CFA = first_attempt, forum_attendance_tw = vis_before_attempt_tw_b, forum_visits_tw = vis_before_attempt_tw) %>% 
   ungroup() 
-
 
 #tw <- assignments %>% filter(assignment_time < 116) # delete observations over 3d quantile
 ```
 
-## Hypothesis 1
+## Research questions
 
-More: file 6.
+  1. What is the relationship between Correctness of the first attempt and forum attendance during task performance? 
+  
+## Database desciption
+
+  - **assignments** - database with data on the the level individual assignments
+  
+## Variables description
+ 
+Important: 
+
+  - **forum_attendance_tw** - Forum attendance during time window (start of assignment-first attempt). Binary.  
+  - **forum_visits_tw** - the number of forum visits during time window. Counted.   
+  - **CFA** - Correctness of the first attempt. Binary.
+
+Less important:
+
+  - **hse_user_id** - a student token;
+  - **course_item_name** and **course_item_type_desc** - item token/name and item type;
+  
+## Hypothesis 1
 
 ### Model 1
 
+Checking the variance of the CFA (correctness of the first attempt) variable 
+
 ```{r}
-# m10 <- glm(data = assignments, factor(first_attempt) ~ 1, family = "binomial")
+# m10 <- glm(data = assignments, factor(CFA) ~ 1, family = "binomial")
 # saveRDS(m10, "data/m10.rds")
-# 
+```
+
+```{r, message= FALSE, warning=FALSE, echo=FALSE}
+system('7z x data/m10.zip -odata/.')
+m10 <- readRDS( "data/m10.rds")
 ```
 
 ```{r}
-system('7z x data/m10.zip -odata/.')
-m10 <- readRDS( "data/m10.rds")
 summary(m10)
 ```
 
+
 ```{r}
-#m1 <- glmer(data = assignments, factor(first_attempt) ~ 1 + (1|hse_user_id) + (1|course_item_name), family = "binomial")
+# m1 <- glmer(data = assignments, factor(CFA) ~ 1 + (1|hse_user_id) + (1|course_item_name), family = "binomial")
 # saveRDS(m1, "data/m1.rds")
-# 
+```
+
+```{r, message= FALSE, warning=FALSE, echo=FALSE}
+system('7z x data/m1.zip -odata/.')
+m1 <- readRDS( "data/m1.rds")
 ```
 
 ```{r}
-system('7z x data/m1.zip -odata/.')
-m1 <- readRDS( "data/m1.rds")
 summary(m1)
 ```
+
 
 ```{r}
 sd_proficieny <- data.frame(VarCorr(m1))[5][1, 1]
 sd_difficulty <- data.frame(VarCorr(m1))[5][2, 1]
 coef <- summary(m1)$coef[1] # intercept of m0
 
-```
-
-```{r, echo=FALSE}
-cat(sprintf("Student standart deviation(proficiency) - %.2f.\n", sd_proficieny))
-cat(sprintf("Assignment standart deviation (difficulty) - %.2f.\n", sd_difficulty))
-```
-
-```{r}
 c_proficieny <- c(round(invlogit(coef - sd_proficieny), digits = 2), round(invlogit(coef + sd_proficieny), digits = 2))
 c_difficulty <- c(round(invlogit(coef - sd_proficieny - sd_difficulty), digits = 2), round(invlogit(coef - sd_proficieny + sd_difficulty), digits = 2))
 
-```
-
-```{r, echo=FALSE}
-cat(sprintf("Correctness of first assignemnt (CFA) or Probability to pass an average by average student assignment with the first attempt  - %.2f, beta - %.2f.\n", round(invlogit(coef), digits = 2), coef))
-cat(sprintf("-sd %.2f and +sd %.2f for student proficiency.\n", c_proficieny[1], c_proficieny[2] ))
-cat(sprintf("-sd %.2f and +sd %.2f for assignemtn difficulty.\n", c_difficulty[1], c_difficulty[2]))
-```
-
-```{r}
 ll1 <- logLik(m10)*-2
 ll2 <- logLik(m1)*-2
 chi <- ll1[1] - ll2[1]
 df <- 3-1
+```
 
-chi
-df
-# the results are significant if qchisq greater than chi 
-qchisq(p=.0001, df=df, lower.tail=FALSE)
+```{r, echo=FALSE}
+cat(sprintf("Parameters of the Correctness of first attempt (CFA): intercept - %.2f, beta - %.2f.\n", round(invlogit(coef), digits = 2), coef))
+cat(sprintf("Student standart deviation(proficiency) - %.2f.\n", sd_proficieny))
+cat(sprintf("Assignment standart deviation (difficulty) - %.2f.\n", sd_difficulty))
+cat(sprintf("-sd %.2f and +sd %.2f for student proficiency.\n", c_proficieny[1], c_proficieny[2] ))
+cat(sprintf("-sd %.2f and +sd %.2f for assignment difficulty.\n", c_difficulty[1], c_difficulty[2]))
+cat(sprintf("The results are significant if noncentral (q) chi-squared greater than chi \nchi-squared - %.2f, degrees of freedom  - %.2f, qchi-squared  - %.2f \n", chi, df, qchisq(p=.0001, df=df, lower.tail=FALSE)))
 ```
 
 ```{r}
-assignments  %>% filter(vis_before_attempt_tw < 1000) %>%   ggplot(aes(x = vis_before_attempt_tw, y = first_attempt, color = course_item_type_desc)) +
+anova(m10, m1)
+```
+
+```{r}
+assignments  %>% filter(forum_visits_tw < 1000) %>%   ggplot(aes(x = forum_visits_tw, y = CFA, color = course_item_type_desc)) +
   geom_point()   +  
 
   geom_smooth(method = "glm", method.args=list(family="binomial")) +   
@@ -128,15 +149,15 @@ assignments  %>% filter(vis_before_attempt_tw < 1000) %>%   ggplot(aes(x = vis_b
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-```{r}
-anova(m10, m1)
-```
+
 
 ### Model 2
 
+Checking the relationship between forum attendance and CFA with two random effects, on student proficience and course difficulty.
+
 ```{r}
-#m2 <- glmer(data = assignments, factor(first_attempt) ~ 1 + vis_before_attempt_tw_b  + (1|hse_user_id) + (1|course_item_name), family = "binomial")
-#saveRDS(m2, "data/m2.rds")
+# m2 <- glmer(data = assignments, factor(CFA) ~ 1 + forum_attendance_tw  + (1|hse_user_id) + (1|course_item_name), family = "binomial")
+# saveRDS(m2, "data/m2.rds")
 ```
 
 ```{r}
@@ -147,26 +168,13 @@ m20 <- summary(m2)
 ```
 
 ```{r, echo=FALSE}
-cat(sprintf("Probability of CFA if a student didn't visit a forum before %.2f.\n", invlogit(m20$coefficients[1])))
-cat(sprintf("Probability of CFA if a student visited a forum at least once - %.2f\n\n", invlogit(m20$coefficients[1] + m20$coefficients[2])))
+cat(sprintf("Probability of CFA if a student didn't visit a forum before - %.2f.\nProbability of CFA if a student visited a forum at least once - %.2f\n\n",  invlogit(m20$coefficients[1])), invlogit(m20$coefficients[1] + m20$coefficients[2]))
 ```
 
 #### Visualisation
 
 ```{r, warning=FALSE}
-# cbind(c("yes", "no"), c(0.70, 0.69)) %>% ggplot(aes(x = assignments$vis_before_attempt_tw_b, y=c(0.70, 0.69))) +
-#   geom_bar(stat='identity', width = 0.6, position = position_dodge(0.7)) #+    
-#   ggtitle("Probability of CFA") +
-#   scale_fill_discrete(labels=c("Passed", "Not passed")) +
-#   labs(x = "Forum visited or not", y = "Probability of CFA", fill = "First attempt") +
-#   theme_bw() +  
-#   theme(plot.title = element_text(hjust = 0.5))
-# 
-
-```
-
-```{r, warning=FALSE}
-assignments  %>%  ggplot(., aes(factor(vis_before_attempt_tw_b), fill = factor(first_attempt))) +
+assignments  %>%  ggplot(., aes(factor(forum_attendance_tw), fill = factor(CFA))) +
   geom_bar(position = "dodge2") +
   labs(x = "Forum visited or not", fill = "First attempt") + theme_classic() +  
   scale_fill_discrete(labels=c("Not passed", "Passed")) +
