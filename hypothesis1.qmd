@@ -168,17 +168,27 @@ m20 <- summary(m2)
 ```
 
 ```{r, echo=FALSE}
-cat(sprintf("Probability of CFA if a student didn't visit a forum before - %.2f.\nProbability of CFA if a student visited a forum at least once - %.2f\n\n",  invlogit(m20$coefficients[1])), invlogit(m20$coefficients[1] + m20$coefficients[2]))
+cat(sprintf("Probability of CFA if a student didn't visit a forum before - %.2f.\nProbability of CFA if a student visited a forum at least once - %.2f\n\n",  invlogit(m20$coefficients[1]), invlogit(m20$coefficients[1] + m20$coefficients[2])))
 ```
 
 #### Visualisation
 
 ```{r, warning=FALSE}
-assignments  %>%  ggplot(., aes(factor(forum_attendance_tw), fill = factor(CFA))) +
-  geom_bar(position = "dodge2") +
-  labs(x = "Forum visited or not", fill = "First attempt") + theme_classic() +  
-  scale_fill_discrete(labels=c("Not passed", "Passed")) +
-  theme(plot.title = element_text(hjust = 0.5))
-
-
+windowsFonts(`Segoe UI` = windowsFont('Segoe UI'))
+colours = c("#f9a65a", "#599ad3")
+assignments  %>% group_by(forum_attendance_tw, CFA) %>% summarise(n = n()) %>%  
+  mutate(forum_attendance_tw = dplyr::recode(forum_attendance_tw, '1' = 'Attended', '0'='Not attended'),
+         CFA = dplyr::recode(CFA, '1' = 'Passed', '0'='Not passed')) %>% 
+  ggplot(., aes(x = factor(forum_attendance_tw), y = n, fill = factor(CFA))) +
+  geom_bar(stat = "identity", position="dodge") +
+  geom_text(aes(label=n), vjust = -0.3, position=position_dodge(width=1)) +
+  labs(x = "Forum visited or not", fill = "First attempt", y = "Count") + theme_classic() +  
+  theme(plot.title = element_text(hjust = 0.2)) + 
+  scale_fill_manual(values=colours) +
+    theme(
+  axis.title.x = element_text(size=12),
+  axis.title.y = element_text(size=12), 
+  axis.text.x = element_text(size=12),
+  text=element_text(family="Segoe UI")
+       ) 
 ```

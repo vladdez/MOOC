@@ -30,6 +30,7 @@ library(glue)
 library(mediation)
 library(utils)
 library(arm)
+library(diagram)
 
 
 remove_outliers <- function(x, na.rm = TRUE, ...) {
@@ -41,9 +42,54 @@ remove_outliers <- function(x, na.rm = TRUE, ...) {
   y
 }
 
+med_diagram <- function(data, height = .75, width = 2, graph_label = NA, node_text_size = 12, edge_text_size = 12, color = "black", ranksep = .2, minlen = 3){
+  
+  require(glue)
+  require(DiagrammeR)
+  
+  data$height  <- height   # node height
+  data$width   <- width    # node width
+  data$color   <- color    # node + edge border color
+  data$ranksep <- ranksep  # separation btwn mediator row and x->y row
+  data$minlen  <- minlen   # minimum edge length
+  
+  data$node_text_size  <- node_text_size
+  data$edge_text_size  <- edge_text_size
+  
+  data$graph_label <- ifelse(is.na(graph_label), "", paste0("label = '", graph_label, "'"))
+
+diagram_out <- glue::glue_data(data,
+  "digraph flowchart {
+      fontname = Helvetica
+      <<graph_label>>
+      graph [ranksep = <<ranksep>>]
+
+      # node definitions with substituted label text
+      node [fontname = Helvetica, shape = rectangle, fixedsize = TRUE, width = <<width>>, height = <<height>>, fontsize = <<node_text_size>>, color = <<color>>]        
+        mm [label = '<<lab_m>>']
+        xx [label = '<<lab_x>>']
+        yy [label = '<<lab_y>>']
+
+      # edge definitions with the node IDs
+      edge [minlen = <<minlen>>, fontname = Helvetica, fontsize = <<edge_text_size>>, color = <<color>>]
+        mm -> yy [label = '<<coef_my>>'];
+        xx -> mm [label = '<<coef_xm>>'];
+        xx -> yy [label = '<<coef_xy>>'];
+      
+      { rank = same; mm }
+      { rank = same; xx; yy }
+      
+      }
+
+      ", .open = "<<", .close = ">>")  
+
+
+DiagrammeR::grViz(diagram_out)  
+}
+
 ```
 
-```{r, include=FALSE}
+```{r, message= FALSE, warning=FALSE, echo=FALSE}
 wd <- getwd()
 system('7z x data/assignments.zip -odata/.')
 
@@ -85,6 +131,23 @@ Less important:
   - **course_item_name** and **course_item_type_desc** - item token/name and item type;
   
 ## Mediation analyses
+```{r}
+# p-value stars transformer
+transform_pvalue <- function(p_value) {
+  if (p_value < 0.001) {
+    transformed <- "***"
+  } else if (p_value < 0.01) {
+    transformed <- "**"
+  } else if (p_value < 0.05) {
+    transformed <- "*"
+  } else {
+    transformed <- ""
+  }
+  
+  return(transformed)
+}
+```
+
 
 ### Diffculty as DV
 
@@ -103,16 +166,16 @@ tw2 <- assignments %>% group_by(course_item_name) %>%
 #### Grouping by users
 
 ```{r}
-# Step 1: X ~ Y
-fit.totaleffect <- glm(data = data.table(tw1), CFA ~ 1 + forum_attendance_tw , family = "binomial") 
+# Step 1: Y ~ X
+fit.totaleffect <- glm(data = data.table(tw1), CFA ~ 1 + difficulty , family = "binomial") 
 #summary(fit.totaleffect)
 
-# Step 2: M ~ Y
+# Step 2: M ~ X
 fit.mediator = glm(data = data.table(tw1), forum_attendance_tw ~ 1 + difficulty , family = "binomial") 
 #summary(fit.mediator)
 # there is an effect
 
-# Step 3: X + M ~ Y
+# Step 3: Y ~ X + M 
 fit.dv = glm(data = data.table(tw1), CFA ~ 1 + forum_attendance_tw + difficulty, family = "binomial")
 #summary(fit.dv)
 # there is an effect, but mediation is incomplete
@@ -125,31 +188,52 @@ summary(results_m1)
 ``` 
 
 ```{r}
-cat(sprintf("Step 1: X ~ Y\nTotal effect is %.4f.\n\n", summary(results_m1)$tau.coef))
+# total
+cat(sprintf("1. Y ~ X\nTotal effect is %.4f.\n\n", summary(results_m1)$tau.coef))
+cat(sprintf("Check 1: %.4f.\n",   fit.totaleffect$coefficients[2] ))
+cat(sprintf("Check 2: %.4f.\n\n",    summary(results_m1)$z0 + round(summary(results_m1)$d0), 5)) # ADE + ACME
 
-cat(sprintf("Step 2: M ~ Y\nAverage causal mediation effect (ACME) is %.5f.\nThis is the indirect effect of the IV (item difficulty) \non the DV (CFA) that goes through the mediator (forum attendance).\n\n", summary(results_m1)$d0))
+#ACME
+cat(sprintf("2: Y ~ x * M\nAverage causal mediation effect (ACME) is %.5f.\nThis is the indirect effect of the IV (item difficulty) \non the DV (CFA) that goes through the mediator (forum attendance).\n\n", summary(results_m1)$d0))
 
-cat(sprintf("Step 3: X + M ~ Y\nAverage direct effect of the IV on the DV is %.4f.\n\n",  summary(results_m1)$z0))
+cat(sprintf("Check: %.4f * %.4f = %.4f.\n\n",  fit.mediator$coefficients[2], fit.dv$coefficients[2], fit.mediator$coefficients[2] * fit.dv$coefficients[2] ))
 
+#ADE
+cat(sprintf("3: Y ~ X - M\nAverage direct effect (ADE) of the IV on the DV is %.4f.\n\n",  summary(results_m1)$z0))
+cat(sprintf("Check 1: %.4f",  fit.dv$coefficients[3]))
+
+```
+```{r}
+med_data <-
+  data.frame(
+    lab_x   = "Item\\nDifficulty",
+    lab_m   = "Forum\\nattendance",
+    lab_y   = "CFA",
+    coef_xm = sprintf('%.2f %s', round(fit.mediator$coefficients[2], 2), transform_pvalue(summary(fit.mediator)$coefficients[8])),
+    coef_my = sprintf('%.2f %s', round(fit.dv$coefficients[2], 2), 
+transform_pvalue(summary(fit.dv)$coefficients[8])),
+    coef_xy = sprintf('%.2f %s(%.2f)', fit.totaleffect$coefficients[2], transform_pvalue(summary(fit.totaleffect)$coefficients[8]),
+fit.dv$coefficients[3])
+  )
+
+med_diagram(med_data)
 ```
 
 #### Grouping by courses
 
 ```{r}
-# Step 1: X ~ Y
-fit.totaleffect <- glm(data = data.table(tw2), CFA ~ 1 + forum_attendance_tw , family = "binomial") 
+# Step 1: Y ~ X
+fit.totaleffect <- glm(data = data.table(tw1), CFA ~ 1 + difficulty , family = "binomial") 
 #summary(fit.totaleffect)
-# there is an effect
 
-# Step 2: M ~ Y
-fit.mediator = glm(data = data.table(tw2), forum_attendance_tw ~ 1 + difficulty , family = "binomial") 
+# Step 2: M ~ X
+fit.mediator = glm(data = data.table(tw1), forum_attendance_tw ~ 1 + difficulty , family = "binomial") 
 #summary(fit.mediator)
 # there is an effect
 
-# Step 3: X + M ~ Y
-fit.dv = glm(data = data.table(tw2), CFA ~ 1 + forum_attendance_tw + difficulty, family = "binomial")
+# Step 3: Y ~ X + M 
+fit.dv = glm(data = data.table(tw1), CFA ~ 1 + forum_attendance_tw + difficulty, family = "binomial")
 #summary(fit.dv)
-
 # there is an effect, but mediation is incomplete
 
 # Step 4: Run the mediation analysis
@@ -157,7 +241,7 @@ results_m2 = mediate(fit.mediator, fit.dv, treat='difficulty', mediator='forum_a
 
 # Step 5: View the mediation results
 summary(results_m2)
-```
+``` 
 
 
 ```{r}
@@ -236,6 +320,8 @@ cat(sprintf("Step 2: M ~ Y\nAverage causal mediation effect (ACME) is %.5f.\nThi
 cat(sprintf("Step 3: X + M ~ Y\nAverage direct effect of the IV on the DV is %.4f.\n\n",  summary(results_m2)$z0))
 ```
 
-## Results
+
+
+
 
 https://towardsdatascience.com/doing-and-reporting-your-first-mediation-analysis-in-r-2fe423b92171

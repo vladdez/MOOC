@@ -121,6 +121,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script src="site_libs/htmlwidgets-1.6.1/htmlwidgets.js"></script>
+<script src="site_libs/viz-1.8.2/viz.js"></script>
+<link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="site_libs/grViz-binding-1.0.10/grViz.js"></script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -207,7 +211,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#diffculty-as-dv" id="toc-diffculty-as-dv" class="nav-link" data-scroll-target="#diffculty-as-dv">Diffculty as DV</a></li>
   <li><a href="#type-as-dv" id="toc-type-as-dv" class="nav-link" data-scroll-target="#type-as-dv">Type as DV</a></li>
   </ul></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
   </ul>
 </nav>
     </div>
@@ -233,6 +236,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div class="cell">
 
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
 </div>
 <section id="research-questions" class="level2">
 <h2 class="anchored" data-anchor-id="research-questions">Research questions</h2>
@@ -266,20 +274,39 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="mediation-analyses" class="level2">
 <h2 class="anchored" data-anchor-id="mediation-analyses">Mediation analyses</h2>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p-value stars transformer</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>transform_pvalue <span class="ot">&lt;-</span> <span class="cf">function</span>(p_value) {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.001</span>) {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">"***"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.01</span>) {</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">"**"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.05</span>) {</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">"*"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">""</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(transformed)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <section id="diffculty-as-dv" class="level3">
 <h3 class="anchored" data-anchor-id="diffculty-as-dv">Diffculty as DV</h3>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tw1 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(hse_user_id) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">difficulty =</span> <span class="fu">median</span>(difficulty), </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>tw2 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(course_item_name) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">difficulty =</span> <span class="fu">median</span>(difficulty), </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>),  </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tw1 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(hse_user_id) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">difficulty =</span> <span class="fu">median</span>(difficulty), </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>tw2 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(course_item_name) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">difficulty =</span> <span class="fu">median</span>(difficulty), </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>),  </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="grouping-by-users" class="level4">
@@ -287,25 +314,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: X ~ Y</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ Y</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: X + M ~ Y</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> difficulty, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>results_m1 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'difficulty'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: View the mediation results</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Y ~ X</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ X</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Y ~ X + M </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> difficulty, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>results_m1 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'difficulty'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: View the mediation results</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -313,17 +340,17 @@ Causal Mediation Analysis
 
 Quasi-Bayesian Confidence Intervals
 
-                         Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)           -0.00272     -0.00447         0.00  &lt;2e-16 ***
-ACME (treated)           -0.00175     -0.00280         0.00  &lt;2e-16 ***
-ADE (control)            -0.97444     -0.97805        -0.97  &lt;2e-16 ***
-ADE (treated)            -0.97347     -0.97711        -0.97  &lt;2e-16 ***
-Total Effect             -0.97619     -0.97953        -0.97  &lt;2e-16 ***
-Prop. Mediated (control)  0.00274      0.00122         0.00  &lt;2e-16 ***
-Prop. Mediated (treated)  0.00177      0.00084         0.00  &lt;2e-16 ***
-ACME (average)           -0.00224     -0.00362         0.00  &lt;2e-16 ***
-ADE (average)            -0.97395     -0.97751        -0.97  &lt;2e-16 ***
-Prop. Mediated (average)  0.00225      0.00103         0.00  &lt;2e-16 ***
+                          Estimate 95% CI Lower 95% CI Upper p-value    
+ACME (control)           -0.002728    -0.004342         0.00  &lt;2e-16 ***
+ACME (treated)           -0.001758    -0.002726         0.00  &lt;2e-16 ***
+ADE (control)            -0.974397    -0.978140        -0.97  &lt;2e-16 ***
+ADE (treated)            -0.973427    -0.977295        -0.97  &lt;2e-16 ***
+Total Effect             -0.976155    -0.979527        -0.97  &lt;2e-16 ***
+Prop. Mediated (control)  0.002725     0.001220         0.00  &lt;2e-16 ***
+Prop. Mediated (treated)  0.001788     0.000825         0.00  &lt;2e-16 ***
+ACME (average)           -0.002243    -0.003561         0.00  &lt;2e-16 ***
+ADE (average)            -0.973912    -0.977716        -0.97  &lt;2e-16 ***
+Prop. Mediated (average)  0.002257     0.001038         0.00  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -336,29 +363,82 @@ Simulations: 1000 </code></pre>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># total</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"1. Y ~ X</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Step 1: X ~ Y
+<pre><code>1. Y ~ X
 Total effect is -0.9762.</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check 1: %.4f.</span><span class="sc">\n</span><span class="st">"</span>,   fit.totaleffect<span class="sc">$</span>coefficients[<span class="dv">2</span>] ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Step 2: M ~ Y
-Average causal mediation effect (ACME) is -0.00272.
+<pre><code>Check 1: -8.7531.</code></pre>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check 2: %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,    <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0 <span class="sc">+</span> <span class="fu">round</span>(<span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0), <span class="dv">5</span>)) <span class="co"># ADE + ACME</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Check 2: -0.9744.</code></pre>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ACME</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"2: Y ~ x * M</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>2: Y ~ x * M
+Average causal mediation effect (ACME) is -0.00273.
 This is the indirect effect of the IV (item difficulty) 
 on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check: %.4f * %.4f = %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  fit.mediator<span class="sc">$</span>coefficients[<span class="dv">2</span>], fit.dv<span class="sc">$</span>coefficients[<span class="dv">2</span>], fit.mediator<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="sc">*</span> fit.dv<span class="sc">$</span>coefficients[<span class="dv">2</span>] ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Step 3: X + M ~ Y
-Average direct effect of the IV on the DV is -0.9744.</code></pre>
+<pre><code>Check: 6.8079 * -0.2144 = -1.4594.</code></pre>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ADE</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"3: Y ~ X - M</span><span class="sc">\n</span><span class="st">Average direct effect (ADE) of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>3: Y ~ X - M
+Average direct effect (ADE) of the IV on the DV is -0.9744.</code></pre>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check 1: %.4f"</span>,  fit.dv<span class="sc">$</span>coefficients[<span class="dv">3</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Check 1: -8.7046</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>med_data <span class="ot">&lt;-</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">lab_x   =</span> <span class="st">"Item</span><span class="sc">\\</span><span class="st">nDifficulty"</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">lab_m   =</span> <span class="st">"Forum</span><span class="sc">\\</span><span class="st">nattendance"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">lab_y   =</span> <span class="st">"CFA"</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">coef_xm =</span> <span class="fu">sprintf</span>(<span class="st">'%.2f %s'</span>, <span class="fu">round</span>(fit.mediator<span class="sc">$</span>coefficients[<span class="dv">2</span>], <span class="dv">2</span>), <span class="fu">transform_pvalue</span>(<span class="fu">summary</span>(fit.mediator)<span class="sc">$</span>coefficients[<span class="dv">8</span>])),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">coef_my =</span> <span class="fu">sprintf</span>(<span class="st">'%.2f %s'</span>, <span class="fu">round</span>(fit.dv<span class="sc">$</span>coefficients[<span class="dv">2</span>], <span class="dv">2</span>), </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">transform_pvalue</span>(<span class="fu">summary</span>(fit.dv)<span class="sc">$</span>coefficients[<span class="dv">8</span>])),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">coef_xy =</span> <span class="fu">sprintf</span>(<span class="st">'%.2f %s(%.2f)'</span>, fit.totaleffect<span class="sc">$</span>coefficients[<span class="dv">2</span>], <span class="fu">transform_pvalue</span>(<span class="fu">summary</span>(fit.totaleffect)<span class="sc">$</span>coefficients[<span class="dv">8</span>]),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>fit.dv<span class="sc">$</span>coefficients[<span class="dv">3</span>])</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="fu">med_diagram</span>(med_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-e429701f9c6e5f7a4300" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-e429701f9c6e5f7a4300">{"x":{"diagram":"digraph flowchart {\nfontname = Helvetica\ngraph [ranksep = 0.2]\n\n# node definitions with substituted label text\nnode [fontname = Helvetica, shape = rectangle, fixedsize = TRUE, width = 2, height = 0.75, fontsize = 12, color = black]        \n  mm [label = \"Forum\\nattendance\"]\n  xx [label = \"Item\\nDifficulty\"]\n  yy [label = \"CFA\"]\n\n# edge definitions with the node IDs\nedge [minlen = 3, fontname = Helvetica, fontsize = 12, color = black]\n  mm -> yy [label = \"-0.21 ***\"];\n  xx -> mm [label = \"6.81 ***\"];\n  xx -> yy [label = \"-8.75 ***(-8.70)\"];\n\n{ rank = same; mm }\n{ rank = same; xx; yy }\n\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -367,27 +447,25 @@ Average direct effect of the IV on the DV is -0.9744.</code></pre>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: X ~ Y</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw2), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ Y</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw2), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: X + M ~ Y</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw2), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> difficulty, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>results_m2 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'difficulty'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: View the mediation results</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Y ~ X</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ X</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Y ~ X + M </span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> difficulty, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>results_m2 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'difficulty'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: View the mediation results</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -396,20 +474,20 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                           Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)           -2.84e-04     0.00e+00            0   0.012 *  
-ACME (treated)           -3.67e-05     0.00e+00            0   0.010 ** 
-ADE (control)            -1.00e+00    -1.00e+00           -1  &lt;2e-16 ***
-ADE (treated)            -1.00e+00    -1.00e+00           -1  &lt;2e-16 ***
-Total Effect             -1.00e+00    -1.00e+00           -1  &lt;2e-16 ***
-Prop. Mediated (control)  0.00e+00     0.00e+00            0   1.000    
-Prop. Mediated (treated)  0.00e+00     0.00e+00            0   1.000    
-ACME (average)           -1.60e-04     0.00e+00            0   0.012 *  
-ADE (average)            -1.00e+00    -1.00e+00           -1  &lt;2e-16 ***
-Prop. Mediated (average)  0.00e+00     0.00e+00            0   1.000    
+ACME (control)           -0.002760    -0.004436         0.00  &lt;2e-16 ***
+ACME (treated)           -0.001783    -0.002826         0.00  &lt;2e-16 ***
+ADE (control)            -0.974216    -0.977962        -0.97  &lt;2e-16 ***
+ADE (treated)            -0.973239    -0.976994        -0.97  &lt;2e-16 ***
+Total Effect             -0.975999    -0.979488        -0.97  &lt;2e-16 ***
+Prop. Mediated (control)  0.002791     0.001313         0.00  &lt;2e-16 ***
+Prop. Mediated (treated)  0.001813     0.000912         0.00  &lt;2e-16 ***
+ACME (average)           -0.002271    -0.003636         0.00  &lt;2e-16 ***
+ADE (average)            -0.973728    -0.977517        -0.97  &lt;2e-16 ***
+Prop. Mediated (average)  0.002302     0.001120         0.00  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Sample Size Used: 669 
+Sample Size Used: 40188 
 
 
 Simulations: 1000 </code></pre>
@@ -418,29 +496,29 @@ Simulations: 1000 </code></pre>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 1: X ~ Y
-Total effect is -0.9999.</code></pre>
+Total effect is -0.9760.</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 2: M ~ Y
-Average causal mediation effect (ACME) is -0.00028.
+Average causal mediation effect (ACME) is -0.00276.
 This is the indirect effect of the IV (item difficulty) 
 on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m2)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m2)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 3: X + M ~ Y
-Average direct effect of the IV on the DV is -0.9999.</code></pre>
+Average direct effect of the IV on the DV is -0.9742.</code></pre>
 </div>
 </div>
 </section>
@@ -450,9 +528,9 @@ Average direct effect of the IV on the DV is -0.9999.</code></pre>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tw3 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(hse_user_id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">course_item_type_id =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(course_item_type_id) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>tw4 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(course_item_name) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">course_item_type_id =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(course_item_type_id) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>tw3 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(hse_user_id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">course_item_type_id =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(course_item_type_id) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>tw4 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(course_item_name) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">course_item_type_id =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(course_item_type_id) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="groupung-by-users" class="level4">
@@ -460,18 +538,18 @@ Average direct effect of the IV on the DV is -0.9999.</code></pre>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> course_item_type_id, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>results_m1 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'course_item_type_id'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> course_item_type_id, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>results_m1 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'course_item_type_id'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -480,16 +558,16 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                          Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)           -0.00994     -0.01222        -0.01  &lt;2e-16 ***
-ACME (treated)           -0.01027     -0.01257        -0.01  &lt;2e-16 ***
-ADE (control)            -0.00997     -0.01988         0.00   0.038 *  
-ADE (treated)            -0.01030     -0.02043         0.00   0.038 *  
-Total Effect             -0.02024     -0.02978        -0.01  &lt;2e-16 ***
-Prop. Mediated (control)  0.49382      0.30625         0.96  &lt;2e-16 ***
-Prop. Mediated (treated)  0.51097      0.32495         0.96  &lt;2e-16 ***
-ACME (average)           -0.01010     -0.01238        -0.01  &lt;2e-16 ***
-ADE (average)            -0.01014     -0.02016         0.00   0.038 *  
-Prop. Mediated (average)  0.50239      0.31559         0.96  &lt;2e-16 ***
+ACME (control)           -0.00991     -0.01228        -0.01  &lt;2e-16 ***
+ACME (treated)           -0.01024     -0.01256        -0.01  &lt;2e-16 ***
+ADE (control)            -0.00993     -0.01875         0.00    0.04 *  
+ADE (treated)            -0.01027     -0.01932         0.00    0.04 *  
+Total Effect             -0.02017     -0.02912        -0.01  &lt;2e-16 ***
+Prop. Mediated (control)  0.48933      0.31331         0.92  &lt;2e-16 ***
+Prop. Mediated (treated)  0.50622      0.33297         0.92  &lt;2e-16 ***
+ACME (average)           -0.01007     -0.01241        -0.01  &lt;2e-16 ***
+ADE (average)            -0.01010     -0.01903         0.00    0.04 *  
+Prop. Mediated (average)  0.49778      0.32333         0.92  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -502,7 +580,7 @@ Simulations: 1000 </code></pre>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 1: X ~ Y
@@ -510,21 +588,21 @@ Total effect is -0.0202.</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item type) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item type) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 2: M ~ Y
-Average causal mediation effect (ACME) is -0.00994.
+Average causal mediation effect (ACME) is -0.00991.
 This is the indirect effect of the IV (item type) 
 on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 3: X + M ~ Y
-Average direct effect of the IV on the DV is -0.0100.</code></pre>
+Average direct effect of the IV on the DV is -0.0099.</code></pre>
 </div>
 </div>
 </section>
@@ -533,25 +611,25 @@ Average direct effect of the IV on the DV is -0.0100.</code></pre>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: X ~ Y</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ Y</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: X + M ~ Y</span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> course_item_type_id, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>results_m2 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'course_item_type_id'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: X ~ Y</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ Y</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: X + M ~ Y</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> course_item_type_id, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>results_m2 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'course_item_type_id'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -560,16 +638,16 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                          Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)             0.0897      -0.0469         0.35    0.96    
-ACME (treated)             0.1383      -0.0622         0.46    0.96    
-ADE (control)             -0.2412      -0.3915        -0.13  &lt;2e-16 ***
-ADE (treated)             -0.1927      -0.2584        -0.13  &lt;2e-16 ***
-Total Effect              -0.1030      -0.2715         0.20    0.52    
-Prop. Mediated (control)   0.1157     -13.2673        14.14    0.44    
-Prop. Mediated (treated)   0.1839     -21.9863        23.08    0.44    
-ACME (average)             0.1140      -0.0545         0.41    0.96    
-ADE (average)             -0.2169      -0.3158        -0.13  &lt;2e-16 ***
-Prop. Mediated (average)   0.1498     -17.6263        18.61    0.44    
+ACME (control)             0.0894      -0.0456         0.35    0.99    
+ACME (treated)             0.1391      -0.0632         0.45    0.99    
+ADE (control)             -0.2412      -0.3879        -0.13  &lt;2e-16 ***
+ADE (treated)             -0.1915      -0.2558        -0.13  &lt;2e-16 ***
+Total Effect              -0.1021      -0.2741         0.18    0.53    
+Prop. Mediated (control)   0.1204     -13.3232        15.18    0.45    
+Prop. Mediated (treated)   0.1896     -22.3001        25.24    0.45    
+ACME (average)             0.1142      -0.0541         0.39    0.99    
+ADE (average)             -0.2163      -0.3139        -0.13  &lt;2e-16 ***
+Prop. Mediated (average)   0.1550     -18.1548        19.92    0.45    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -582,39 +660,36 @@ Simulations: 1000 </code></pre>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 1: X ~ Y
-Total effect is -0.1030.</code></pre>
+Total effect is -0.1021.</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item type) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item type) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 2: M ~ Y
-Average causal mediation effect (ACME) is 0.08973.
+Average causal mediation effect (ACME) is 0.08941.
 This is the indirect effect of the IV (item type) 
 on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m2)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m2)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 3: X + M ~ Y
 Average direct effect of the IV on the DV is -0.2412.</code></pre>
 </div>
 </div>
-</section>
-</section>
-</section>
-<section id="results" class="level2">
-<h2 class="anchored" data-anchor-id="results">Results</h2>
 <p>https://towardsdatascience.com/doing-and-reporting-your-first-mediation-analysis-in-r-2fe423b92171</p>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
