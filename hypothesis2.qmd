@@ -20,6 +20,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(dplyr)
 library(data.table)
 library(lme4)
+library(glmmTMB)
 library(ggplot2)
 library(pscl) # for odTest
 library(arm)
@@ -31,7 +32,9 @@ library(mediation)
 library(utils)
 library(arm)
 library(diagram)
-
+library(boot)
+library(parallel)
+library(tictoc)
 
 remove_outliers <- function(x, na.rm = TRUE, ...) {
   qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
@@ -91,7 +94,7 @@ DiagrammeR::grViz(diagram_out)
 
 ```{r, message= FALSE, warning=FALSE, echo=FALSE}
 wd <- getwd()
-system('7z x data/assignments.zip -odata/.')
+#system('7z x data/assignments.zip -odata/.')
 
 assignments <- fread("data/assignments.csv") %>%    # works in Ubuntu
   mutate(course_item_type_desc = factor(course_item_type_desc), 
@@ -109,28 +112,31 @@ assignments <- fread("data/assignments.csv") %>%    # works in Ubuntu
 
 ## Research questions
 
-  1. Is there a mediation effect between item difficulty and CFA, where forum attendance is a mediator?
-  2. Is there a mediation effect between item type and CFA, where forum attendance is a mediator?
+1.  Is there a mediation effect between item difficulty and CFA, where forum attendance is a mediator?
+2.  Is there a mediation effect between item type and CFA, where forum attendance is a mediator?
 
 ## Database desciption
 
-  - **assignments** - database with data on the the level individual assignments
-  
-## Variables description
- 
-Important: 
+-   **assignments** - database with data on the the level individual assignments
 
-  - **forum_attendance_tw** - Forum attendance during time window (start of assignment-first attempt). Binary.  
-  - **forum_visits_tw** - the number of forum visits during time window. Counted.   
-  - **CFA** - Correctness of the first attempt. Binary.
-  - **difficulty** - the number of students failed  / the number of student participated. From 0 to 1.
+## Variables description
+
+Important:
+
+-   **forum_attendance_tw** - Forum attendance during time window (start of assignment-first attempt). Binary.\
+-   **forum_visits_tw** - the number of forum visits during time window. Counted.\
+-   **CFA** - Correctness of the first attempt. Binary.
+-   **difficulty** - the number of students failed / the number of student participated. From 0 to 1.
 
 Less important:
 
-  - **hse_user_id** - a student token;
-  - **course_item_name** and **course_item_type_desc** - item token/name and item type;
-  
+-   **hse_user_id** - a student token;
+-   **course_item_name** and **course_item_type_desc** - item token/name and item type;
+
+Analysis is influenced by https://towardsdatascience.com/doing-and-reporting-your-first-mediation-analysis-in-r-2fe423b92171
+
 ## Mediation analyses
+
 ```{r}
 # p-value stars transformer
 transform_pvalue <- function(p_value) {
@@ -148,15 +154,16 @@ transform_pvalue <- function(p_value) {
 }
 ```
 
-
 ### Diffculty as DV
 
 ```{r}
+# grouping by user
 tw1 <- assignments %>% group_by(hse_user_id) %>% 
   summarise(difficulty = median(difficulty), 
             forum_attendance_tw = median(as.numeric(forum_attendance_tw) - 1), 
             CFA = median(CFA)) 
 
+# grouping by course
 tw2 <- assignments %>% group_by(course_item_name) %>% 
   summarise(difficulty = median(difficulty), 
             forum_attendance_tw = median(as.numeric(forum_attendance_tw) - 1),  
@@ -185,7 +192,7 @@ results_m1 = mediate(fit.mediator, fit.dv, treat='difficulty', mediator='forum_a
 
 # Step 5: View the mediation results
 summary(results_m1)
-``` 
+```
 
 ```{r}
 # total
@@ -203,6 +210,7 @@ cat(sprintf("3: Y ~ X - M\nAverage direct effect (ADE) of the IV on the DV is %.
 cat(sprintf("Check 1: %.4f",  fit.dv$coefficients[3]))
 
 ```
+
 ```{r}
 med_data <-
   data.frame(
@@ -241,8 +249,7 @@ results_m2 = mediate(fit.mediator, fit.dv, treat='difficulty', mediator='forum_a
 
 # Step 5: View the mediation results
 summary(results_m2)
-``` 
-
+```
 
 ```{r}
 cat(sprintf("Step 1: X ~ Y\nTotal effect is %.4f.\n\n", summary(results_m2)$tau.coef))
@@ -277,7 +284,6 @@ results_m1 = mediate(fit.mediator, fit.dv, treat='course_item_type_id', mediator
 summary(results_m1)
 ```
 
-
 ```{r}
 cat(sprintf("Step 1: X ~ Y\nTotal effect is %.4f.\n\n", summary(results_m1)$tau.coef))
 
@@ -311,7 +317,6 @@ summary(results_m2)
 
 ```
 
-
 ```{r}
 cat(sprintf("Step 1: X ~ Y\nTotal effect is %.4f.\n\n", summary(results_m2)$tau.coef))
 
@@ -320,8 +325,40 @@ cat(sprintf("Step 2: M ~ Y\nAverage causal mediation effect (ACME) is %.5f.\nThi
 cat(sprintf("Step 3: X + M ~ Y\nAverage direct effect of the IV on the DV is %.4f.\n\n",  summary(results_m2)$z0))
 ```
 
+### 2 random and 2 fixed effects
+
+```{r}
+# Step 1: Mediator Model (X → M)
+m_2re_mediator <- glmmTMB(
+  forum_attendance_tw  ~ 1 + difficulty + (1 | hse_user_id) + (1 | course_item_type_id), 
+  data = assignments, 
+  family = gaussian()
+)
+summary(m_2re_mediator)
+```
+
+```{r}
+# Step 2: Total Effect Model (X → Y)
+m_2re_total<- glmmTMB(
+  CFA  ~ 1 + difficulty + (1 | hse_user_id) + (1 | course_item_type_id), 
+  data = assignments, 
+  family = gaussian()
+)
+summary(m_2re_total)
+```
+
+```{r}
+# Step 3: Direct & Indirect Effects Model (X, M → Y)
+m_2re_di <- glmmTMB(
+  CFA ~ 1 + difficulty + forum_attendance_tw + (1 | hse_user_id) + (1 | course_item_type_id), 
+  data = assignments, 
+  family = binomial()
+)
+summary(m_2re_di)
+```
+
+
+checking the difference
 
 
 
-
-https://towardsdatascience.com/doing-and-reporting-your-first-mediation-analysis-in-r-2fe423b92171
