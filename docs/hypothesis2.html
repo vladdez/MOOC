@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,11 +17,12 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -108,7 +79,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -117,14 +94,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
-<script src="site_libs/htmlwidgets-1.6.1/htmlwidgets.js"></script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <script src="site_libs/viz-1.8.2/viz.js"></script>
 <link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
-<script src="site_libs/grViz-binding-1.0.10/grViz.js"></script>
+<script src="site_libs/grViz-binding-1.0.11/grViz.js"></script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -134,11 +114,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Hypothesis 2</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./hypothesis1.html">Analyses</a></li><li class="breadcrumb-item"><a href="./hypothesis2.html">Hypotheses 2</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -146,50 +131,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
-      <div class="mt-2 flex-shrink-0 align-items-center">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Project description</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Project description</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./about.html" class="sidebar-item-text sidebar-link">About</a>
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Analyses</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Analyses</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./hypothesis1.html" class="sidebar-item-text sidebar-link">Hypotheses 1</a>
+  <a href="./hypothesis1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hypotheses 1</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./hypothesis2.html" class="sidebar-item-text sidebar-link active">Hypotheses 2</a>
+  <a href="./hypothesis2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Hypotheses 2</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./plots.html" class="sidebar-item-text sidebar-link">Plots</a>
+  <a href="./plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Plots</span></a>
   </div>
 </li>
       </ul>
@@ -197,6 +188,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -210,6 +202,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#diffculty-as-dv" id="toc-diffculty-as-dv" class="nav-link" data-scroll-target="#diffculty-as-dv">Diffculty as DV</a></li>
   <li><a href="#type-as-dv" id="toc-type-as-dv" class="nav-link" data-scroll-target="#type-as-dv">Type as DV</a></li>
+  <li><a href="#random-and-2-fixed-effects" id="toc-random-and-2-fixed-effects" class="nav-link" data-scroll-target="#random-and-2-fixed-effects">2 random and 2 fixed effects</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -217,9 +210,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./hypothesis1.html">Analyses</a></li><li class="breadcrumb-item"><a href="./hypothesis2.html">Hypotheses 2</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Hypothesis 2</h1>
+<h1 class="title">Hypothesis 2</h1>
 </div>
 
 
@@ -232,16 +225,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
   
 
+
 </header>
 
-<div class="cell">
 
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0</code></pre>
-</div>
-</div>
 <section id="research-questions" class="level2">
 <h2 class="anchored" data-anchor-id="research-questions">Research questions</h2>
 <ol type="1">
@@ -271,68 +258,71 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><strong>hse_user_id</strong> - a student token;</li>
 <li><strong>course_item_name</strong> and <strong>course_item_type_desc</strong> - item token/name and item type;</li>
 </ul>
+<p>Analysis is influenced by https://towardsdatascience.com/doing-and-reporting-your-first-mediation-analysis-in-r-2fe423b92171</p>
 </section>
 <section id="mediation-analyses" class="level2">
 <h2 class="anchored" data-anchor-id="mediation-analyses">Mediation analyses</h2>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p-value stars transformer</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>transform_pvalue <span class="ot">&lt;-</span> <span class="cf">function</span>(p_value) {</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.001</span>) {</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">"***"</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.01</span>) {</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">"**"</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.05</span>) {</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">"*"</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">""</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(transformed)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p-value stars transformer</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>transform_pvalue <span class="ot">&lt;-</span> <span class="cf">function</span>(p_value) {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.001</span>) {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">"***"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.01</span>) {</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">"**"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.05</span>) {</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">"*"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    transformed <span class="ot">&lt;-</span> <span class="st">""</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(transformed)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="diffculty-as-dv" class="level3">
 <h3 class="anchored" data-anchor-id="diffculty-as-dv">Diffculty as DV</h3>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tw1 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(hse_user_id) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">difficulty =</span> <span class="fu">median</span>(difficulty), </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>tw2 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(course_item_name) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">difficulty =</span> <span class="fu">median</span>(difficulty), </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>),  </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># grouping by user</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tw1 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(hse_user_id) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">difficulty =</span> <span class="fu">median</span>(difficulty), </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># grouping by course</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>tw2 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(course_item_name) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">difficulty =</span> <span class="fu">median</span>(difficulty), </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>),  </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="grouping-by-users" class="level4">
 <h4 class="anchored" data-anchor-id="grouping-by-users">Grouping by users</h4>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Y ~ X</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ X</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Y ~ X + M </span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> difficulty, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>results_m1 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'difficulty'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: View the mediation results</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Y ~ X</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ X</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Y ~ X + M </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> difficulty, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>results_m1 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'difficulty'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: View the mediation results</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -341,16 +331,16 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                           Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)           -0.002728    -0.004342         0.00  &lt;2e-16 ***
-ACME (treated)           -0.001758    -0.002726         0.00  &lt;2e-16 ***
-ADE (control)            -0.974397    -0.978140        -0.97  &lt;2e-16 ***
-ADE (treated)            -0.973427    -0.977295        -0.97  &lt;2e-16 ***
-Total Effect             -0.976155    -0.979527        -0.97  &lt;2e-16 ***
-Prop. Mediated (control)  0.002725     0.001220         0.00  &lt;2e-16 ***
-Prop. Mediated (treated)  0.001788     0.000825         0.00  &lt;2e-16 ***
-ACME (average)           -0.002243    -0.003561         0.00  &lt;2e-16 ***
-ADE (average)            -0.973912    -0.977716        -0.97  &lt;2e-16 ***
-Prop. Mediated (average)  0.002257     0.001038         0.00  &lt;2e-16 ***
+ACME (control)           -0.002785    -0.004658         0.00  &lt;2e-16 ***
+ACME (treated)           -0.001798    -0.002913         0.00  &lt;2e-16 ***
+ADE (control)            -0.974248    -0.978050        -0.97  &lt;2e-16 ***
+ADE (treated)            -0.973262    -0.977262        -0.97  &lt;2e-16 ***
+Total Effect             -0.976047    -0.979453        -0.97  &lt;2e-16 ***
+Prop. Mediated (control)  0.002811     0.001359         0.00  &lt;2e-16 ***
+Prop. Mediated (treated)  0.001831     0.000895         0.00  &lt;2e-16 ***
+ACME (average)           -0.002292    -0.003722         0.00  &lt;2e-16 ***
+ADE (average)            -0.973755    -0.977644        -0.97  &lt;2e-16 ***
+Prop. Mediated (average)  0.002321     0.001119         0.00  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -361,111 +351,111 @@ Simulations: 1000 </code></pre>
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># total</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"1. Y ~ X</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># total</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"1. Y ~ X</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>1. Y ~ X
-Total effect is -0.9762.</code></pre>
+Total effect is -0.9760.</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check 1: %.4f.</span><span class="sc">\n</span><span class="st">"</span>,   fit.totaleffect<span class="sc">$</span>coefficients[<span class="dv">2</span>] ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check 1: %.4f.</span><span class="sc">\n</span><span class="st">"</span>,   fit.totaleffect<span class="sc">$</span>coefficients[<span class="dv">2</span>] ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Check 1: -8.7531.</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check 2: %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,    <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0 <span class="sc">+</span> <span class="fu">round</span>(<span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0), <span class="dv">5</span>)) <span class="co"># ADE + ACME</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check 2: %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,    <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0 <span class="sc">+</span> <span class="fu">round</span>(<span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0), <span class="dv">5</span>)) <span class="co"># ADE + ACME</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Check 2: -0.9744.</code></pre>
+<pre><code>Check 2: -0.9742.</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ACME</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"2: Y ~ x * M</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ACME</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"2: Y ~ x * M</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>2: Y ~ x * M
-Average causal mediation effect (ACME) is -0.00273.
+Average causal mediation effect (ACME) is -0.00278.
 This is the indirect effect of the IV (item difficulty) 
 on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check: %.4f * %.4f = %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  fit.mediator<span class="sc">$</span>coefficients[<span class="dv">2</span>], fit.dv<span class="sc">$</span>coefficients[<span class="dv">2</span>], fit.mediator<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="sc">*</span> fit.dv<span class="sc">$</span>coefficients[<span class="dv">2</span>] ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check: %.4f * %.4f = %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  fit.mediator<span class="sc">$</span>coefficients[<span class="dv">2</span>], fit.dv<span class="sc">$</span>coefficients[<span class="dv">2</span>], fit.mediator<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="sc">*</span> fit.dv<span class="sc">$</span>coefficients[<span class="dv">2</span>] ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Check: 6.8079 * -0.2144 = -1.4594.</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ADE</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"3: Y ~ X - M</span><span class="sc">\n</span><span class="st">Average direct effect (ADE) of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ADE</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"3: Y ~ X - M</span><span class="sc">\n</span><span class="st">Average direct effect (ADE) of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>3: Y ~ X - M
-Average direct effect (ADE) of the IV on the DV is -0.9744.</code></pre>
+Average direct effect (ADE) of the IV on the DV is -0.9742.</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check 1: %.4f"</span>,  fit.dv<span class="sc">$</span>coefficients[<span class="dv">3</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Check 1: %.4f"</span>,  fit.dv<span class="sc">$</span>coefficients[<span class="dv">3</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Check 1: -8.7046</code></pre>
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>med_data <span class="ot">&lt;-</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">lab_x   =</span> <span class="st">"Item</span><span class="sc">\\</span><span class="st">nDifficulty"</span>,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">lab_m   =</span> <span class="st">"Forum</span><span class="sc">\\</span><span class="st">nattendance"</span>,</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">lab_y   =</span> <span class="st">"CFA"</span>,</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">coef_xm =</span> <span class="fu">sprintf</span>(<span class="st">'%.2f %s'</span>, <span class="fu">round</span>(fit.mediator<span class="sc">$</span>coefficients[<span class="dv">2</span>], <span class="dv">2</span>), <span class="fu">transform_pvalue</span>(<span class="fu">summary</span>(fit.mediator)<span class="sc">$</span>coefficients[<span class="dv">8</span>])),</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">coef_my =</span> <span class="fu">sprintf</span>(<span class="st">'%.2f %s'</span>, <span class="fu">round</span>(fit.dv<span class="sc">$</span>coefficients[<span class="dv">2</span>], <span class="dv">2</span>), </span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">transform_pvalue</span>(<span class="fu">summary</span>(fit.dv)<span class="sc">$</span>coefficients[<span class="dv">8</span>])),</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">coef_xy =</span> <span class="fu">sprintf</span>(<span class="st">'%.2f %s(%.2f)'</span>, fit.totaleffect<span class="sc">$</span>coefficients[<span class="dv">2</span>], <span class="fu">transform_pvalue</span>(<span class="fu">summary</span>(fit.totaleffect)<span class="sc">$</span>coefficients[<span class="dv">8</span>]),</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>fit.dv<span class="sc">$</span>coefficients[<span class="dv">3</span>])</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="fu">med_diagram</span>(med_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>med_data <span class="ot">&lt;-</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">lab_x   =</span> <span class="st">"Item</span><span class="sc">\\</span><span class="st">nDifficulty"</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">lab_m   =</span> <span class="st">"Forum</span><span class="sc">\\</span><span class="st">nattendance"</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">lab_y   =</span> <span class="st">"CFA"</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">coef_xm =</span> <span class="fu">sprintf</span>(<span class="st">'%.2f %s'</span>, <span class="fu">round</span>(fit.mediator<span class="sc">$</span>coefficients[<span class="dv">2</span>], <span class="dv">2</span>), <span class="fu">transform_pvalue</span>(<span class="fu">summary</span>(fit.mediator)<span class="sc">$</span>coefficients[<span class="dv">8</span>])),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">coef_my =</span> <span class="fu">sprintf</span>(<span class="st">'%.2f %s'</span>, <span class="fu">round</span>(fit.dv<span class="sc">$</span>coefficients[<span class="dv">2</span>], <span class="dv">2</span>), </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">transform_pvalue</span>(<span class="fu">summary</span>(fit.dv)<span class="sc">$</span>coefficients[<span class="dv">8</span>])),</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">coef_xy =</span> <span class="fu">sprintf</span>(<span class="st">'%.2f %s(%.2f)'</span>, fit.totaleffect<span class="sc">$</span>coefficients[<span class="dv">2</span>], <span class="fu">transform_pvalue</span>(<span class="fu">summary</span>(fit.totaleffect)<span class="sc">$</span>coefficients[<span class="dv">8</span>]),</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>fit.dv<span class="sc">$</span>coefficients[<span class="dv">3</span>])</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="fu">med_diagram</span>(med_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-e429701f9c6e5f7a4300" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-e429701f9c6e5f7a4300">{"x":{"diagram":"digraph flowchart {\nfontname = Helvetica\ngraph [ranksep = 0.2]\n\n# node definitions with substituted label text\nnode [fontname = Helvetica, shape = rectangle, fixedsize = TRUE, width = 2, height = 0.75, fontsize = 12, color = black]        \n  mm [label = \"Forum\\nattendance\"]\n  xx [label = \"Item\\nDifficulty\"]\n  yy [label = \"CFA\"]\n\n# edge definitions with the node IDs\nedge [minlen = 3, fontname = Helvetica, fontsize = 12, color = black]\n  mm -> yy [label = \"-0.21 ***\"];\n  xx -> mm [label = \"6.81 ***\"];\n  xx -> yy [label = \"-8.75 ***(-8.70)\"];\n\n{ rank = same; mm }\n{ rank = same; xx; yy }\n\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-b7e666a2d694d77d9bb0" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-b7e666a2d694d77d9bb0">{"x":{"diagram":"digraph flowchart {\nfontname = Helvetica\n\ngraph [ranksep = 0.2]\n\n# node definitions with substituted label text\nnode [fontname = Helvetica, shape = rectangle, fixedsize = TRUE, width = 2, height = 0.75, fontsize = 12, color = black]        \n  mm [label = \"Forum\\nattendance\"]\n  xx [label = \"Item\\nDifficulty\"]\n  yy [label = \"CFA\"]\n\n# edge definitions with the node IDs\nedge [minlen = 3, fontname = Helvetica, fontsize = 12, color = black]\n  mm -> yy [label = \"-0.21 ***\"];\n  xx -> mm [label = \"6.81 ***\"];\n  xx -> yy [label = \"-8.75 ***(-8.70)\"];\n\n{ rank = same; mm }\n{ rank = same; xx; yy }\n\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
 <section id="grouping-by-courses" class="level4">
 <h4 class="anchored" data-anchor-id="grouping-by-courses">Grouping by courses</h4>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Y ~ X</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ X</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Y ~ X + M </span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> difficulty, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>results_m2 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'difficulty'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: View the mediation results</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Y ~ X</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ X</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Y ~ X + M </span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw1), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> difficulty, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>results_m2 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'difficulty'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: View the mediation results</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -474,16 +464,16 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                           Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)           -0.002760    -0.004436         0.00  &lt;2e-16 ***
-ACME (treated)           -0.001783    -0.002826         0.00  &lt;2e-16 ***
-ADE (control)            -0.974216    -0.977962        -0.97  &lt;2e-16 ***
-ADE (treated)            -0.973239    -0.976994        -0.97  &lt;2e-16 ***
-Total Effect             -0.975999    -0.979488        -0.97  &lt;2e-16 ***
-Prop. Mediated (control)  0.002791     0.001313         0.00  &lt;2e-16 ***
-Prop. Mediated (treated)  0.001813     0.000912         0.00  &lt;2e-16 ***
-ACME (average)           -0.002271    -0.003636         0.00  &lt;2e-16 ***
-ADE (average)            -0.973728    -0.977517        -0.97  &lt;2e-16 ***
-Prop. Mediated (average)  0.002302     0.001120         0.00  &lt;2e-16 ***
+ACME (control)           -0.002775    -0.004658         0.00  &lt;2e-16 ***
+ACME (treated)           -0.001776    -0.002837         0.00  &lt;2e-16 ***
+ADE (control)            -0.974483    -0.978013        -0.97  &lt;2e-16 ***
+ADE (treated)            -0.973484    -0.977103        -0.97  &lt;2e-16 ***
+Total Effect             -0.976259    -0.979504        -0.97  &lt;2e-16 ***
+Prop. Mediated (control)  0.002781     0.001230         0.00  &lt;2e-16 ***
+Prop. Mediated (treated)  0.001806     0.000884         0.00  &lt;2e-16 ***
+ACME (average)           -0.002275    -0.003728         0.00  &lt;2e-16 ***
+ADE (average)            -0.973984    -0.977518        -0.97  &lt;2e-16 ***
+Prop. Mediated (average)  0.002294     0.001067         0.00  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -494,31 +484,31 @@ Simulations: 1000 </code></pre>
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 1: X ~ Y
-Total effect is -0.9760.</code></pre>
+Total effect is -0.9763.</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item difficulty) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 2: M ~ Y
-Average causal mediation effect (ACME) is -0.00276.
+Average causal mediation effect (ACME) is -0.00278.
 This is the indirect effect of the IV (item difficulty) 
 on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m2)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m2)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 3: X + M ~ Y
-Average direct effect of the IV on the DV is -0.9742.</code></pre>
+Average direct effect of the IV on the DV is -0.9745.</code></pre>
 </div>
 </div>
 </section>
@@ -526,30 +516,30 @@ Average direct effect of the IV on the DV is -0.9742.</code></pre>
 <section id="type-as-dv" class="level3">
 <h3 class="anchored" data-anchor-id="type-as-dv">Type as DV</h3>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>tw3 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(hse_user_id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">course_item_type_id =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(course_item_type_id) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>tw4 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(course_item_name) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">course_item_type_id =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(course_item_type_id) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>tw3 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(hse_user_id) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">course_item_type_id =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(course_item_type_id) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>tw4 <span class="ot">&lt;-</span> assignments <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(course_item_name) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">course_item_type_id =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(course_item_type_id) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">forum_attendance_tw =</span> <span class="fu">median</span>(<span class="fu">as.numeric</span>(forum_attendance_tw) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">CFA =</span> <span class="fu">median</span>(CFA)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="groupung-by-users" class="level4">
 <h4 class="anchored" data-anchor-id="groupung-by-users">Groupung by users</h4>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> course_item_type_id, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>results_m1 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'course_item_type_id'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw3), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> course_item_type_id, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>results_m1 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'course_item_type_id'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -558,16 +548,16 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                          Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)           -0.00991     -0.01228        -0.01  &lt;2e-16 ***
-ACME (treated)           -0.01024     -0.01256        -0.01  &lt;2e-16 ***
-ADE (control)            -0.00993     -0.01875         0.00    0.04 *  
-ADE (treated)            -0.01027     -0.01932         0.00    0.04 *  
-Total Effect             -0.02017     -0.02912        -0.01  &lt;2e-16 ***
-Prop. Mediated (control)  0.48933      0.31331         0.92  &lt;2e-16 ***
-Prop. Mediated (treated)  0.50622      0.33297         0.92  &lt;2e-16 ***
-ACME (average)           -0.01007     -0.01241        -0.01  &lt;2e-16 ***
-ADE (average)            -0.01010     -0.01903         0.00    0.04 *  
-Prop. Mediated (average)  0.49778      0.32333         0.92  &lt;2e-16 ***
+ACME (control)           -0.00995     -0.01211        -0.01  &lt;2e-16 ***
+ACME (treated)           -0.01028     -0.01250        -0.01  &lt;2e-16 ***
+ADE (control)            -0.01008     -0.01922         0.00   0.034 *  
+ADE (treated)            -0.01042     -0.01975         0.00   0.034 *  
+Total Effect             -0.02037     -0.02923        -0.01  &lt;2e-16 ***
+Prop. Mediated (control)  0.48565      0.30911         0.91  &lt;2e-16 ***
+Prop. Mediated (treated)  0.50301      0.32901         0.91  &lt;2e-16 ***
+ACME (average)           -0.01012     -0.01228        -0.01  &lt;2e-16 ***
+ADE (average)            -0.01025     -0.01949         0.00   0.034 *  
+Prop. Mediated (average)  0.49433      0.31938         0.91  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -578,58 +568,58 @@ Simulations: 1000 </code></pre>
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 1: X ~ Y
-Total effect is -0.0202.</code></pre>
+Total effect is -0.0204.</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item type) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item type) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m1)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 2: M ~ Y
-Average causal mediation effect (ACME) is -0.00991.
+Average causal mediation effect (ACME) is -0.00995.
 This is the indirect effect of the IV (item type) 
 on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m1)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 3: X + M ~ Y
-Average direct effect of the IV on the DV is -0.0099.</code></pre>
+Average direct effect of the IV on the DV is -0.0101.</code></pre>
 </div>
 </div>
 </section>
 <section id="grouping-by-courses-1" class="level4">
 <h4 class="anchored" data-anchor-id="grouping-by-courses-1">Grouping by courses</h4>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: X ~ Y</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ Y</span></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: X + M ~ Y</span></span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> course_item_type_id, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>results_m2 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'course_item_type_id'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: X ~ Y</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>fit.totaleffect <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.totaleffect)</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: M ~ Y</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>fit.mediator <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), forum_attendance_tw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> course_item_type_id , <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.mediator)</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: X + M ~ Y</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>fit.dv <span class="ot">=</span> <span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">data.table</span>(tw4), CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> course_item_type_id, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fit.dv)</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="co"># there is an effect, but mediation is incomplete</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Run the mediation analysis</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>results_m2 <span class="ot">=</span> <span class="fu">mediate</span>(fit.mediator, fit.dv, <span class="at">treat=</span><span class="st">'course_item_type_id'</span>, <span class="at">mediator=</span><span class="st">'forum_attendance_tw'</span>)</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results_m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -638,16 +628,16 @@ Causal Mediation Analysis
 Quasi-Bayesian Confidence Intervals
 
                          Estimate 95% CI Lower 95% CI Upper p-value    
-ACME (control)             0.0894      -0.0456         0.35    0.99    
-ACME (treated)             0.1391      -0.0632         0.45    0.99    
-ADE (control)             -0.2412      -0.3879        -0.13  &lt;2e-16 ***
-ADE (treated)             -0.1915      -0.2558        -0.13  &lt;2e-16 ***
-Total Effect              -0.1021      -0.2741         0.18    0.53    
-Prop. Mediated (control)   0.1204     -13.3232        15.18    0.45    
-Prop. Mediated (treated)   0.1896     -22.3001        25.24    0.45    
-ACME (average)             0.1142      -0.0541         0.39    0.99    
-ADE (average)             -0.2163      -0.3139        -0.13  &lt;2e-16 ***
-Prop. Mediated (average)   0.1550     -18.1548        19.92    0.45    
+ACME (control)             0.0955      -0.0458         0.38    0.99    
+ACME (treated)             0.1470      -0.0601         0.47    0.99    
+ADE (control)             -0.2433      -0.3910        -0.13  &lt;2e-16 ***
+ADE (treated)             -0.1918      -0.2575        -0.13  &lt;2e-16 ***
+Total Effect              -0.0963      -0.2709         0.22    0.57    
+Prop. Mediated (control)   0.1215     -14.5613        15.24    0.44    
+Prop. Mediated (treated)   0.1909     -25.0173        25.37    0.44    
+ACME (average)             0.1212      -0.0527         0.42    0.99    
+ADE (average)             -0.2175      -0.3195        -0.13  &lt;2e-16 ***
+Prop. Mediated (average)   0.1562     -19.3450        20.20    0.44    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -658,37 +648,217 @@ Simulations: 1000 </code></pre>
 </div>
 </div>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 1: X ~ Y</span><span class="sc">\n</span><span class="st">Total effect is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>tau.coef))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 1: X ~ Y
-Total effect is -0.1021.</code></pre>
+Total effect is -0.0963.</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item type) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 2: M ~ Y</span><span class="sc">\n</span><span class="st">Average causal mediation effect (ACME) is %.5f.</span><span class="sc">\n</span><span class="st">This is the indirect effect of the IV (item type) </span><span class="sc">\n</span><span class="st">on the DV (CFA) that goes through the mediator (forum attendance).</span><span class="sc">\n\n</span><span class="st">"</span>, <span class="fu">summary</span>(results_m2)<span class="sc">$</span>d0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 2: M ~ Y
-Average causal mediation effect (ACME) is 0.08941.
+Average causal mediation effect (ACME) is 0.09549.
 This is the indirect effect of the IV (item type) 
 on the DV (CFA) that goes through the mediator (forum attendance).</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m2)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Step 3: X + M ~ Y</span><span class="sc">\n</span><span class="st">Average direct effect of the IV on the DV is %.4f.</span><span class="sc">\n\n</span><span class="st">"</span>,  <span class="fu">summary</span>(results_m2)<span class="sc">$</span>z0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Step 3: X + M ~ Y
-Average direct effect of the IV on the DV is -0.2412.</code></pre>
+Average direct effect of the IV on the DV is -0.2433.</code></pre>
 </div>
 </div>
-<p>https://towardsdatascience.com/doing-and-reporting-your-first-mediation-analysis-in-r-2fe423b92171</p>
-
-
 </section>
+</section>
+<section id="random-and-2-fixed-effects" class="level3">
+<h3 class="anchored" data-anchor-id="random-and-2-fixed-effects">2 random and 2 fixed effects</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Mediator Model (X → M)</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>m_2re_mediator <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  forum_attendance_tw  <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> hse_user_id) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> course_item_type_id), </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> assignments, </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>()</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_2re_mediator)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: gaussian  ( identity )
+Formula:          
+forum_attendance_tw ~ 1 + difficulty + (1 | hse_user_id) + (1 |  
+    course_item_type_id)
+Data: assignments
+
+      AIC       BIC    logLik  deviance  df.resid 
+ 713100.9  713161.2 -356545.5  713090.9   1258385 
+
+Random effects:
+
+Conditional model:
+ Groups              Name        Variance Std.Dev.
+ hse_user_id         (Intercept) 0.01712  0.1308  
+ course_item_type_id (Intercept) 0.01092  0.1045  
+ Residual                        0.09859  0.3140  
+Number of obs: 1258390, groups:  hse_user_id, 40188; course_item_type_id, 2
+
+Dispersion estimate for gaussian family (sigma^2): 0.0986 
+
+Conditional model:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) 0.082189   0.073914    1.11    0.266    
+difficulty  0.202799   0.001872  108.32   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Total Effect Model (X → Y)</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>m_2re_total<span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  CFA  <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> hse_user_id) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> course_item_type_id), </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> assignments, </span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>()</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_2re_total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: gaussian  ( identity )
+Formula:          
+CFA ~ 1 + difficulty + (1 | hse_user_id) + (1 | course_item_type_id)
+Data: assignments
+
+      AIC       BIC    logLik  deviance  df.resid 
+1427548.4 1427608.7 -713769.2 1427538.4   1258385 
+
+Random effects:
+
+Conditional model:
+ Groups              Name        Variance  Std.Dev.
+ hse_user_id         (Intercept) 1.734e-02 0.131673
+ course_item_type_id (Intercept) 1.375e-06 0.001173
+ Residual                        1.759e-01 0.419453
+Number of obs: 1258390, groups:  hse_user_id, 40188; course_item_type_id, 2
+
+Dispersion estimate for gaussian family (sigma^2): 0.176 
+
+Conditional model:
+             Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  0.996992   0.001497   666.1   &lt;2e-16 ***
+difficulty  -0.997215   0.002496  -399.6   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Direct &amp; Indirect Effects Model (X, M → Y)</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>m_2re_di <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  CFA <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> difficulty <span class="sc">+</span> forum_attendance_tw <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> hse_user_id) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> course_item_type_id), </span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> assignments, </span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_2re_di)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: binomial  ( logit )
+Formula:          
+CFA ~ 1 + difficulty + forum_attendance_tw + (1 | hse_user_id) +  
+    (1 | course_item_type_id)
+Data: assignments
+
+      AIC       BIC    logLik  deviance  df.resid 
+1358950.9 1359011.2 -679470.5 1358940.9   1258385 
+
+Random effects:
+
+Conditional model:
+ Groups              Name        Variance  Std.Dev. 
+ hse_user_id         (Intercept) 6.165e-01 7.852e-01
+ course_item_type_id (Intercept) 8.519e-11 9.230e-06
+Number of obs: 1258390, groups:  hse_user_id, 40188; course_item_type_id, 2
+
+Conditional model:
+                      Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)           2.636563   0.007286   361.8   &lt;2e-16 ***
+difficulty           -5.278928   0.015031  -351.2   &lt;2e-16 ***
+forum_attendance_tw1 -0.070954   0.006329   -11.2   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>checking the difference</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.dv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = CFA ~ 1 + forum_attendance_tw + course_item_type_id, 
+    family = "binomial", data = data.table(tw4))
+
+Coefficients:
+                    Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)           2.3570     0.1794  13.135  &lt; 2e-16 ***
+forum_attendance_tw  -1.5843     0.4150  -3.818 0.000135 ***
+course_item_type_id  -1.3350     0.2304  -5.794 6.89e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 620.55  on 668  degrees of freedom
+Residual deviance: 552.58  on 666  degrees of freedom
+AIC: 566.06
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_2re_di)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: binomial  ( logit )
+Formula:          
+CFA ~ 1 + difficulty + forum_attendance_tw + (1 | hse_user_id) +  
+    (1 | course_item_type_id)
+Data: assignments
+
+      AIC       BIC    logLik  deviance  df.resid 
+1358950.9 1359011.2 -679470.5 1358940.9   1258385 
+
+Random effects:
+
+Conditional model:
+ Groups              Name        Variance  Std.Dev. 
+ hse_user_id         (Intercept) 6.165e-01 7.852e-01
+ course_item_type_id (Intercept) 8.519e-11 9.230e-06
+Number of obs: 1258390, groups:  hse_user_id, 40188; course_item_type_id, 2
+
+Conditional model:
+                      Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)           2.636563   0.007286   361.8   &lt;2e-16 ***
+difficulty           -5.278928   0.015031  -351.2   &lt;2e-16 ***
+forum_attendance_tw1 -0.070954   0.006329   -11.2   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+
+
 </section>
 </section>
 
@@ -720,9 +890,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -758,10 +942,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -771,8 +972,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -784,9 +994,245 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -827,6 +1273,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 
